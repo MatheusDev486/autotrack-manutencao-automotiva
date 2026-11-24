@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>AutoTrack — Guia Oficial de Apresentação e Perguntas da Banca</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+    @page {
+      size: A4;
+      margin: 12mm 15mm 15mm 15mm;
+      @bottom-right {
+        content: "Página " counter(page) " de " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 8pt;
+        color: #64748b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 9.5pt;
+    }
+
+    /* Utilitários de Quebra de Página */
+    .page-break {
+      page-break-before: always;
+    }
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+
+    /* Cabeçalho da Capa */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .header-banner h1 {
+      font-size: 20pt;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    .header-banner h1 span {
+      color: #60a5fa;
+    }
+
+    .header-banner .subtitle {
+      font-size: 11pt;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 14px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 8.5pt;
+    }
+
+    .meta-item strong {
+      color: #93c5fd;
+    }
+
+    /* Seções */
+    h2.section-title {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-top: 18px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3.subsection-title {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      margin-bottom: 8px;
+      color: #334155;
+      text-align: justify;
+    }
+
+    /* Tabelas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px 0;
+      font-size: 8.5pt;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 7.5pt;
+      letter-spacing: 0.5px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    /* Caixas de Destaque */
+    .box-info {
+      background: #eff6ff;
+      border-left: 4px solid #3b82f6;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin: 10px 0;
+      font-size: 8.5pt;
+    }
+
+    .box-success {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin: 10px 0;
+      font-size: 8.5pt;
+    }
+
+    .box-warning {
+      background: #fefce8;
+      border-left: 4px solid #eab308;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin: 10px 0;
+      font-size: 8.5pt;
+    }
+
+    /* Código */
+    code, pre {
+      font-family: 'JetBrains Mono', Consolas, monospace;
+      font-size: 8pt;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #93c5fd;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin: 8px 0;
+      overflow-x: auto;
+      line-height: 1.4;
+      border: 1px solid #1e293b;
+    }
+
+    code.inline {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 1px 4px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+      font-weight: 600;
+    }
+
+    /* Timeline de Apresentação */
+    .timeline-item {
+      display: flex;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+
+    .timeline-time {
+      min-width: 65px;
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 8pt;
+      text-align: center;
+      height: fit-content;
+    }
+
+    .timeline-content {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      flex: 1;
+    }
+
+    .timeline-content strong {
+      color: #0f172a;
+      font-size: 9pt;
+    }
+
+    .speaker-badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      font-size: 7pt;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
+
+    /* Cartões de Perguntas e Respostas */
+    .qa-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .qa-question {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .qa-question::before {
+      content: "❓";
+      font-size: 10pt;
+    }
+
+    .qa-answer {
+      font-size: 8.5pt;
+      color: #334155;
+      text-align: justify;
+      line-height: 1.45;
+    }
+
+    .qa-answer strong {
+      color: #0f172a;
+    }
+
+    .qa-tip {
+      margin-top: 6px;
+      padding: 5px 8px;
+      background: #f0fdf4;
+      border-left: 3px solid #22c55e;
+      font-size: 7.5pt;
+      color: #166534;
+      border-radius: 0 4px 4px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BANNER PRINCIPAL / CAPA -->
+  <div class="header-banner">
+    <h1>Auto<span>Track</span> — Roteiro de Apresentação & Guia da Banca</h1>
+    <div class="subtitle">Trabalho Final: Projeto de Banco de Dados com CRUD Completo (Valor: 3,0 Pontos)</div>
+    
+    <div class="meta-grid">
+      <div class="meta-item">
+        <strong>Sistema:</strong> Gestão de Manutenção Automotiva (MySQL 8.x)<br>
+        <strong>Data da Apresentação:</strong> 18 de Novembro de 2026<br>
+        <strong>Repositório:</strong> github.com/MatheusDev486/autotrack-manutencao-automotiva
+      </div>
+      <div class="meta-item">
+        <strong>Integrantes do Grupo:</strong><br>
+        • Matheus da Silva Gomes (RA: 273137)<br>
+        • Guilherme Coco da Costa (RA: 272449)<br>
+        • Carlos Henrique Beltramo Rodrigues (RA: 272766)
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: CHECKLIST DE AVALIAÇÃO (OS 3,0 PONTOS GARANTIDOS) -->
+  <h2 class="section-title">1. Matriz de Atendimento aos Critérios da Avaliação</h2>
+  <p>
+    Tabela comparativa demonstrando como cada requisito solicitado pelo professor foi implementado integralmente no código do AutoTrack:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 28%;">Critério Solicitado</th>
+        <th style="width: 47%;">Como foi implementado no AutoTrack</th>
+        <th style="width: 25%;">Local no Código</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Banco de Dados (>= 2 tabelas relacionadas com PK/FK)</strong></td>
+        <td>Modeladas <strong>3 tabelas</strong> InnoDB relacionadas: <code class="inline">clientes</code> (1:N) <code class="inline">veiculos</code> (1:N) <code class="inline">manutencoes</code>, com PKs <code class="inline">AUTO_INCREMENT</code>, FKs com <code class="inline">ON DELETE RESTRICT</code> e campos <code class="inline">UNIQUE</code> (CPF, E-mail, Placa).</td>
+        <td><code class="inline">database/schema.sql</code></td>
+      </tr>
+      <tr>
+        <td><strong>2. CRUD Completo</strong></td>
+        <td>Create (<code class="inline">INSERT</code>), Read (<code class="inline">SELECT</code>), Update (<code class="inline">UPDATE</code>) e Delete (<code class="inline">DELETE</code>) para Clientes, Veículos e Manutenções via Prepared Statements, com formulários e modais funcionais.</td>
+        <td><code class="inline">src/controllers/*</code><br><code class="inline">public/js/app.js</code></td>
+      </tr>
+      <tr>
+        <td><strong>3. Consulta com JOIN</strong></td>
+        <td><strong>Query 1:</strong> Junção tripla (<code class="inline">INNER JOIN</code>) entre <code class="inline">manutencoes</code>, <code class="inline">veiculos</code> e <code class="inline">clientes</code>, exibindo detalhes da ordem de serviço com o proprietário.</td>
+        <td><code class="inline">database/consultas_avaliacao.sql</code><br>Endpoint <code class="inline">/api/relatorios/join</code></td>
+      </tr>
+      <tr>
+        <td><strong>4. Agregação ou Subconsulta (COUNT, SUM, AVG)</strong></td>
+        <td><strong>Query 2:</strong> Agregação com <code class="inline">COUNT</code>, <code class="inline">SUM</code> e <code class="inline">AVG</code> agrupando por veículo (<code class="inline">ONLY_FULL_GROUP_BY</code>).<br><strong>Query 3:</strong> Subquery dinâmica calculando veículos acima da média.</td>
+        <td><code class="inline">database/consultas_avaliacao.sql</code><br>Endpoints <code class="inline">/agregacao</code> e <code class="inline">/subquery</code></td>
+      </tr>
+      <tr>
+        <td><strong>5. Integração Front-end + Back-end + MySQL Real</strong></td>
+        <td>Comunicação assíncrona HTTP/JSON (SPA Tailwind + Express + pool nativo <code class="inline">mysql2/promise</code>). <strong>Zero dados mockados, zero SQLite ou JSON de arquivo.</strong></td>
+        <td><code class="inline">src/server.js</code><br><code class="inline">public/index.html</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SEÇÃO 2: ROTEIRO MINUTO A MINUTO DA APRESENTAÇÃO -->
+  <h2 class="section-title">2. Roteiro de Apresentação (Pitch de 5 a 7 Minutos)</h2>
+  <p>
+    Siga esta divisão cronológica para uma apresentação fluida, profissional e dentro do tempo regulamentar:
+  </p>
+
+  <div class="timeline-item">
+    <div class="timeline-time">Min 00 - 01</div>
+    <div class="timeline-content">
+      <strong>Abertura e Contextualização do Problema Real</strong> <span class="speaker-badge">Matheus</span>
+      <p style="margin-top: 4px; font-size: 8pt;">
+        "Boa noite, professor e colegas. O nosso sistema é o <strong>AutoTrack</strong>. Nós identificamos um problema muito comum em oficinas e com motoristas: a perda de controle do histórico de manutenções, quilometragens das revisões e dos gastos acumulados por veículo. Para resolver isso, desenvolvemos uma solução completa conectada estritamente a um banco de dados relacional <strong>MySQL 8</strong>."
+      </p>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-time">Min 01 - 02</div>
+    <div class="timeline-content">
+      <strong>Arquitetura e Modelo Entidade-Relacionamento (DER)</strong> <span class="speaker-badge">Guilherme</span>
+      <p style="margin-top: 4px; font-size: 8pt;">
+        "Na modelagem de dados, criamos 3 entidades fortemente relacionadas usando a engine InnoDB do MySQL:
+        1) <strong>Clientes</strong> (com restrição de unicidade para CPF e E-mail);
+        2) <strong>Veículos</strong> (com chave estrangeira para o cliente proprietário e placa única); e
+        3) <strong>Manutenções</strong> (com chave estrangeira para o veículo, tipo preventivo/corretivo e status da OS).
+        Configuramos regras de integridade referencial <code class="inline">ON DELETE RESTRICT</code> para garantir que nenhum histórico fique órfão."
+      </p>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-time">Min 02 - 04</div>
+    <div class="timeline-content">
+      <strong>Demonstração Prática do CRUD e Integridade Referencial</strong> <span class="speaker-badge">Carlos</span>
+      <p style="margin-top: 4px; font-size: 8pt;">
+        "Vamos demonstrar o CRUD funcionando ao vivo no navegador:
+        1. Mostrar a aba de <strong>Clientes</strong> e cadastrar um novo cliente.
+        2. Ir para a aba de <strong>Veículos</strong> e cadastrar um carro, mostrando que o select já puxa o cliente do banco.
+        3. Cadastrar uma <strong>Ordem de Manutenção</strong> preventiva.
+        4. <em>O Grande Destaque:</em> Tentar excluir um cliente que já tem carro cadastrado! O sistema dispara o erro MySQL 1451 e a nossa API bloqueia a exclusão, mantendo a integridade do banco."
+      </p>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-time">Min 04 - 06</div>
+    <div class="timeline-content">
+      <strong>Consultas SQL Obrigatórias no Laboratório SQL</strong> <span class="speaker-badge">Matheus / Todos</span>
+      <p style="margin-top: 4px; font-size: 8pt;">
+        "Para comprovar os requisitos acadêmicos, criamos uma aba dedicada chamada <strong>Laboratório SQL</strong>:
+        • <strong>Query 1 (JOIN):</strong> Executamos um INNER JOIN triplo que une OS, veículo e cliente em tempo real.
+        • <strong>Query 2 (Agregação):</strong> Mostramos o GROUP BY calculando COUNT de ordens, SUM de gastos e AVG (ticket médio) respeitando a regra estrita <code class="inline">ONLY_FULL_GROUP_BY</code> do MySQL 8.
+        • <strong>Query 3 (Subconsulta):</strong> Mostramos a subquery com <code class="inline">HAVING</code> que calcula a média global e filtra apenas os carros cujo custo superou a média da oficina."
+      </p>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-time">Min 06 - 07</div>
+    <div class="timeline-content">
+      <strong>Conclusão, Histórico Git e Perguntas da Banca</strong> <span class="speaker-badge">Todos</span>
+      <p style="margin-top: 4px; font-size: 8pt;">
+        "Finalizamos mostrando o nosso terminal com <code class="inline">git log --oneline</code>, comprovando que o projeto foi versionado em 5 commits atômicos organizados por camadas de software. Estamos à disposição para as perguntas da banca!"
+      </p>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- SEÇÃO 3: PERGUNTAS DA BANCA E RESPOSTAS PRONTAS (COLO DE PROVA) -->
+  <h2 class="section-title">3. Possíveis Perguntas da Banca e Como Responder (Colo de Prova)</h2>
+  <p>
+    Abaixo estão as 8 perguntas mais prováveis que o professor de Banco de Dados fará durante a arguição, com as respostas técnicas exatas:
+  </p>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">1. Por que vocês escolheram o MySQL e como garantiram que não houvesse persistência simulada?</div>
+    <div class="qa-answer">
+      "Optamos pelo <strong>MySQL 8.x</strong> por ser um SGBD amplamente adotado no mercado, com suporte a transações ACID e motor InnoDB. Garantimos a persistência real conectando o Back-end através do driver nativo <code class="inline">mysql2/promise</code> com um <strong>Pool de Conexões</strong> configurado no arquivo <code class="inline">src/config/database.js</code>. Todas as operações de CRUD executam comandos SQL puros (<code class="inline">INSERT</code>, <code class="inline">SELECT</code>, <code class="inline">UPDATE</code>, <code class="inline">DELETE</code>) direto nas tabelas do banco de dados <code class="inline">autotrack_db</code>, sem qualquer uso de SQLite, arquivos JSON locais ou memória temporária."
+    </div>
+    <div class="qa-tip">
+      💡 <strong>Dica de ouro:</strong> Diga que se você reiniciar o servidor ou fechar o navegador, todos os dados continuam intactos no MySQL Workbench.
+    </div>
+  </div>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">2. O que acontece se eu tentar excluir um cliente que já possui veículos vinculados?</div>
+    <div class="qa-answer">
+      "O MySQL impede a exclusão automaticamente através da restrição de chave estrangeira com a regra <code class="inline">ON DELETE RESTRICT</code> definida em <code class="inline">database/schema.sql</code>. Quando essa operação é tentada, o motor InnoDB gera o erro MySQL <strong>1451</strong> (<code class="inline">ER_ROW_IS_REFERENCED_2</code>). No Back-end, nós capturamos exatamente esse código de erro e enviamos uma resposta HTTP 409 Conflict amigável para o Front-end, informando ao usuário que ele não pode deletar um cliente sem antes desvincular seus veículos."
+    </div>
+    <div class="qa-tip">
+      💡 <strong>Dica de ouro:</strong> Mostre a linha 24 do arquivo <code class="inline">src/config/database.js</code> onde o erro 1451 é tratado explicitamente!
+    </div>
+  </div>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">3. O que é o modo ONLY_FULL_GROUP_BY do MySQL 8 e como a Query 2 de vocês atende a essa exigência?</div>
+    <div class="qa-answer">
+      "No MySQL 8, o modo padrão <code class="inline">ONLY_FULL_GROUP_BY</code> rejeita consultas em que uma coluna não-agregada é listada no <code class="inline">SELECT</code> sem estar presente na cláusula <code class="inline">GROUP BY</code>, evitando resultados indeterminados ou ambíguos. Na nossa Consulta 2 (Gastos por Veículo), nós colocamos explicitamente todas as colunas descritivas (<code class="inline">v.id</code>, <code class="inline">v.placa</code>, <code class="inline">v.marca</code>, <code class="inline">v.modelo</code>, <code class="inline">v.ano</code>, <code class="inline">c.nome</code>) no <code class="inline">GROUP BY</code>, reservando para funções de agregação apenas o <code class="inline">COUNT(m.id)</code>, <code class="inline">SUM(m.valor)</code> e <code class="inline">AVG(m.valor)</code>."
+    </div>
+  </div>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">4. Como vocês preveniram falhas de segurança do tipo SQL Injection?</div>
+    <div class="qa-answer">
+      "Não utilizamos concatenação de strings para montar comandos SQL dinâmicos. Em todos os controllers (<code class="inline">clienteController</code>, <code class="inline">veiculoController</code>, etc.), utilizamos <strong>Prepared Statements</strong> com marcadores de parâmetro posicionais (<code class="inline">?</code>). Dessa forma, o driver <code class="inline">mysql2</code> envia a query pré-compilada separadamente dos dados de entrada do usuário, tratando qualquer caractere especial como dado literal e impedindo a injeção de instruções maliciosas."
+    </div>
+  </div>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">5. Qual é a diferença entre a consulta com JOIN e a Subconsulta implementada?</div>
+    <div class="qa-answer">
+      "A consulta com <strong>JOIN</strong> (<code class="inline">INNER JOIN</code>) combina horizontalmente linhas de 3 tabelas diferentes em uma mesma projeção através da correspondência de chaves (<code class="inline">m.veiculo_id = v.id</code> e <code class="inline">v.cliente_id = c.id</code>). Já a <strong>Subconsulta</strong> é uma query aninhada dentro da cláusula <code class="inline">HAVING</code>: a subquery calcula dinamicamente a média global de gastos de todos os veículos da oficina (<code class="inline">SELECT AVG(...)</code>), e a query externa filtra apenas os grupos de veículos cujo somatório individual de gastos é estritamente superior a esse valor de corte."
+    </div>
+  </div>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">6. Por que vocês usaram HAVING em vez de WHERE na consulta de subquery?</div>
+    <div class="qa-answer">
+      "Porque a cláusula <code class="inline">WHERE</code> atua como filtro de linhas individuais <em>antes</em> de qualquer agrupamento ou função agregada ser processada. Já a cláusula <code class="inline">HAVING</code> é avaliada <em>após</em> o cálculo das agregações (<code class="inline">GROUP BY</code>). Como o critério de comparação depende de uma soma acumulada (<code class="inline">SUM(m.valor)</code>), a sintaxe do SQL exige obrigatoriamente o uso de <code class="inline">HAVING gasto_acumulado > (subquery)</code>."
+    </div>
+  </div>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">7. Como vocês modelaram os tipos de dados e restrições no schema?</div>
+    <div class="qa-answer">
+      "Utilizamos tipos padronizados: valores monetários usam <code class="inline">DECIMAL(10,2)</code> para evitar erros de arredondamento de ponto flutuante; quilometragem e ano usam <code class="inline">INT</code>; datas usam <code class="inline">DATE</code> e <code class="inline">DATETIME</code> com <code class="inline">DEFAULT CURRENT_TIMESTAMP</code>; e categorias fixas (como o tipo da manutenção 'PREVENTIVA'/'CORRETIVA' e o status da OS) usam <code class="inline">ENUM</code>. Adicionalmente, aplicamos constraints <code class="inline">UNIQUE</code> na placa do veículo, no CPF e no e-mail dos clientes."
+    </div>
+  </div>
+
+  <div class="qa-card avoid-break">
+    <div class="qa-question">8. Se o sistema crescer para 500 mil manutenções, como garantiriam a performance do banco?</div>
+    <div class="qa-answer">
+      "Para manter alta performance em escala: 1) Garantiríamos índices B-Tree nas chaves estrangeiras (<code class="inline">veiculo_id</code> e <code class="inline">cliente_id</code>) e na coluna de busca temporal (<code class="inline">data_manutencao</code>); 2) Implementaríamos paginação com <code class="inline">LIMIT</code> e <code class="inline">OFFSET</code> na API para não sobrecarregar a memória com transferências em massa; e 3) Analisaríamos o plano de execução das consultas através do comando <code class="inline">EXPLAIN</code> do MySQL."
+    </div>
+  </div>
+
+  <!-- SEÇÃO 4: CHECKLIST TÉCNICO PARA O DIA DA APRESENTAÇÃO -->
+  <h2 class="section-title">4. Checklist Rápido para Rodar no Dia da Apresentação</h2>
+  <div class="box-info avoid-break">
+    <strong>Passo 1:</strong> Abra o <strong>MySQL Workbench</strong> e confirme que o serviço local do MySQL está ativo.<br>
+    <strong>Passo 2:</strong> Abra o terminal na pasta do projeto e execute: <code class="inline">npm start</code>.<br>
+    <strong>Passo 3:</strong> Abra o navegador em: <code class="inline">http://localhost:3000</code>.<br>
+    <strong>Passo 4:</strong> Verifique o badge superior direito: se estiver <strong>verde ("MySQL Conectado")</strong>, o sistema está 100% pronto para a apresentação!
+  </div>
+
+</body>
+</html>

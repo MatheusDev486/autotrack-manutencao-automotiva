@@ -32,13 +32,13 @@
           <img src="img/logo.jpg" alt="AutoTrack Logo" class="h-14 sm:h-16 w-auto object-contain rounded select-none shadow-sm">
         </div>
 
-        <!-- Indicador de Conexão MySQL & Recarregar -->
+        <!-- Indicador de Conexão & Recarregar -->
         <div class="flex items-center gap-3">
           <div id="db-status-badge" class="db-pill">
             <span class="db-dot-connected animate-pulse" id="db-status-dot"></span>
-            <span class="text-xs font-medium" id="db-status-text">Verificando MySQL...</span>
+            <span class="text-xs font-medium" id="db-status-text">Conectando...</span>
           </div>
-          <button onclick="App.verificarConexao()" title="Recarregar status do banco" class="p-1.5 text-[#9A9A9A] hover:text-white rounded hover:bg-[#1A1A1A] transition">
+          <button onclick="App.verificarConexao()" title="Recarregar status" class="p-1.5 text-[#9A9A9A] hover:text-white rounded hover:bg-[#1A1A1A] transition">
             <i class="fa-solid fa-rotate text-sm"></i>
           </button>
         </div>
@@ -49,7 +49,7 @@
       <nav class="flex space-x-1 sm:space-x-2 py-2 overflow-x-auto nav-bar-container">
         <button onclick="App.navegar('dashboard')" id="nav-dashboard" class="tab-btn active">
           <i class="fa-solid fa-chart-pie text-sm"></i>
-          <span>Dashboard & Relatórios</span>
+          <span>Painel</span>
         </button>
         <button onclick="App.navegar('clientes')" id="nav-clientes" class="tab-btn">
           <i class="fa-solid fa-users text-sm"></i>
@@ -61,7 +61,7 @@
         </button>
         <button onclick="App.navegar('manutencoes')" id="nav-manutencoes" class="tab-btn">
           <i class="fa-solid fa-screwdriver-wrench text-sm"></i>
-          <span>Manutenções (OS)</span>
+          <span>Manutenções</span>
         </button>
         <button onclick="App.navegar('historico')" id="nav-historico" class="tab-btn">
           <i class="fa-solid fa-clock-rotate-left text-sm"></i>
@@ -69,7 +69,7 @@
         </button>
         <button onclick="App.navegar('sql')" id="nav-sql" class="tab-btn">
           <i class="fa-solid fa-database text-sm"></i>
-          <span>Laboratório SQL (Avaliação)</span>
+          <span>Consultas SQL</span>
         </button>
       </nav>
 
@@ -150,15 +150,15 @@
         </div>
       </div>
 
-      <!-- Relatórios Obrigatórios (Query 2 e Query 1) -->
-      <div class="grid grid-cols-1 gap-4">
+      <!-- Relatórios e Consultas do Painel -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-        <!-- Relatório Query 2: Agregação por Veículo (GROUP BY) -->
+        <!-- Relatório: Serviços por Veículo -->
         <div class="query-panel flex flex-col">
           <div class="flex items-center justify-between mb-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="query-badge">Gastos e Serviços por Veículo</span>
+                <span class="query-badge">Serviços por veículo</span>
               </div>
             </div>
             <button onclick="App.carregarRelatorioAgregacao()" class="query-refresh-btn">
@@ -173,19 +173,53 @@
                   <th class="py-2 px-3">Veículo / Placa</th>
                   <th class="py-2 px-3">Proprietário</th>
                   <th class="py-2 px-3 text-center">Qtd. OS</th>
-                  <th class="py-2 px-3 text-right">Total Gasto</th>
-                  <th class="py-2 px-3 text-right">Ticket Médio</th>
+                  <th class="py-2 px-3 text-right">Valor total</th>
                 </tr>
               </thead>
               <tbody id="tbody-relatorio-agregacao">
                 <tr>
-                  <td colspan="5" class="py-6 text-center text-[#9A9A9A]">Carregando dados agregados...</td>
+                  <td colspan="4" class="py-6 text-center text-[#9A9A9A]">Carregando dados...</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
+        <!-- Relatório: Veículos acima da média de valor -->
+        <div class="query-panel flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="query-badge">Veículos acima da média de valor</span>
+              </div>
+              <p class="query-subtitle mt-1">
+                Média geral por veículo: <strong id="subquery-media-label" class="text-white font-semibold">R$ 0,00</strong>
+              </p>
+            </div>
+            <button onclick="App.carregarRelatorioSubquery()" class="query-refresh-btn">
+              <i class="fa-solid fa-rotate-right"></i>Atualizar
+            </button>
+          </div>
+
+          <div class="overflow-x-auto flex-1">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th class="py-2 px-3">Veículo</th>
+                  <th class="py-2 px-3">Placa</th>
+                  <th class="py-2 px-3">Proprietário</th>
+                  <th class="py-2 px-3 text-center">Serviços</th>
+                  <th class="py-2 px-3 text-right">Valor acumulado</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-relatorio-subquery">
+                <tr>
+                  <td colspan="5" class="py-6 text-center text-[#9A9A9A]">Carregando dados...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
       </div>
 
@@ -339,7 +373,7 @@
         <div class="flex items-center justify-between">
           <div>
             <div class="flex items-center gap-2">
-              <span class="query-badge">Histórico Relacional Completo</span>
+              <span class="query-badge">Histórico de Manutenções</span>
             </div>
           </div>
           <button onclick="App.carregarRelatorioJoin()" class="query-refresh-btn">
@@ -375,7 +409,7 @@
     </section>
 
     <!-- ======================================================================= -->
-    <!-- ABA 6: LABORATÓRIO SQL (AVALIAÇÃO ACADÊMICA) -->
+    <!-- ABA 6: CONSULTAS SQL -->
     <!-- ======================================================================= -->
     <section id="view-sql" class="hidden space-y-4">
       <div class="bg-[#121212] p-4 rounded border border-[#2A2A2A]">
@@ -384,9 +418,9 @@
             <i class="fa-solid fa-code"></i>
           </div>
           <div>
-            <h2 class="text-xl font-bold font-heading text-white">Laboratório Interativo de Consultas SQL (MySQL 8)</h2>
+            <h2 class="text-xl font-bold font-heading text-white">Consultas SQL</h2>
             <p class="text-xs text-[#9A9A9A]">
-              Espaço de demonstração para a banca: execute cada consulta obrigatória em tempo real contra o banco MySQL.
+              Execute cada consulta em tempo real contra o banco.
             </p>
           </div>
         </div>
@@ -400,7 +434,7 @@
             <i class="fa-solid fa-diagram-project text-[#D7261E]"></i>
           </div>
           <h3 class="text-sm font-bold font-heading text-white">Junção Relacional (INNER JOIN)</h3>
-          <p class="text-xs text-[#9A9A9A] mt-0.5">Conecta manutencoes -> veiculos -> clientes em uma única visão unificada.</p>
+          <p class="text-xs text-[#9A9A9A] mt-0.5">Conecta manutenções, veículos e clientes em uma visão unificada.</p>
         </button>
 
         <button onclick="App.executarLaboratorioSQL('agregacao')" id="btn-lab-agregacao" class="p-3.5 rounded bg-[#121212] border border-[#2A2A2A] hover:border-[#D7261E] text-left transition">
@@ -409,7 +443,7 @@
             <i class="fa-solid fa-calculator text-[#9A9A9A]"></i>
           </div>
           <h3 class="text-sm font-bold font-heading text-white">Agregação (GROUP BY)</h3>
-          <p class="text-xs text-[#9A9A9A] mt-0.5">COUNT(id), SUM(valor) e AVG(valor) agrupando por veículo no padrão MySQL 8.</p>
+          <p class="text-xs text-[#9A9A9A] mt-0.5">COUNT, SUM e AVG agrupando por veículo.</p>
         </button>
 
         <button onclick="App.executarLaboratorioSQL('subquery')" id="btn-lab-subquery" class="p-3.5 rounded bg-[#121212] border border-[#2A2A2A] hover:border-[#D7261E] text-left transition">
@@ -417,8 +451,8 @@
             <span class="text-xs font-bold font-heading text-[#9A9A9A] uppercase">Consulta 3</span>
             <i class="fa-solid fa-filter text-[#9A9A9A]"></i>
           </div>
-          <h3 class="text-sm font-bold font-heading text-white">Subconsulta Dinâmica (Subquery)</h3>
-          <p class="text-xs text-[#9A9A9A] mt-0.5">Filtra via HAVING os veículos cujo gasto acumulado supera a média global.</p>
+          <h3 class="text-sm font-bold font-heading text-white">Subconsulta (Subquery)</h3>
+          <p class="text-xs text-[#9A9A9A] mt-0.5">Filtra os veículos cujo valor acumulado supera a média geral por veículo.</p>
         </button>
       </div>
 
@@ -431,7 +465,7 @@
           </div>
           <button onclick="App.reexecutarLaboratorioSQL()" class="btn-primary-red text-xs py-1.5 px-3">
             <i class="fa-solid fa-play text-xs"></i>
-            <span>Executar no MySQL Agora</span>
+            <span>Executar Consulta</span>
           </button>
         </div>
 
@@ -443,7 +477,7 @@
         <!-- Retorno dos Resultados -->
         <div class="mt-4">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-semibold font-heading text-[#9A9A9A] uppercase tracking-wider">Resultado da Execução (MySQL 8)</span>
+            <span class="text-xs font-semibold font-heading text-[#9A9A9A] uppercase tracking-wider">Resultado da Execução</span>
             <span id="lab-result-count" class="text-xs text-[#9A9A9A]">0 registros retornados</span>
           </div>
           <div class="overflow-x-auto max-h-96 rounded border border-[#2A2A2A] bg-[#0A0A0A]">
@@ -509,7 +543,7 @@
           <button type="button" onclick="App.fecharModalCliente()" class="btn-secondary-dark">Cancelar</button>
           <button type="submit" class="btn-primary-red">
             <i class="fa-solid fa-check"></i>
-            <span>Salvar no MySQL</span>
+            <span>Salvar</span>
           </button>
         </div>
       </form>
@@ -576,7 +610,7 @@
           <button type="button" onclick="App.fecharModalVeiculo()" class="btn-secondary-dark">Cancelar</button>
           <button type="submit" class="btn-primary-red">
             <i class="fa-solid fa-check"></i>
-            <span>Salvar no MySQL</span>
+            <span>Salvar</span>
           </button>
         </div>
       </form>
@@ -654,7 +688,7 @@
           <button type="button" onclick="App.fecharModalManutencao()" class="btn-secondary-dark">Cancelar</button>
           <button type="submit" class="btn-primary-red">
             <i class="fa-solid fa-check"></i>
-            <span>Salvar no MySQL</span>
+            <span>Salvar</span>
           </button>
         </div>
       </form>
@@ -674,7 +708,7 @@
       
       <div class="flex items-center justify-center gap-2 mt-5">
         <button onclick="App.fecharModalConfirmar()" class="btn-secondary-dark">Cancelar</button>
-        <button id="btn-confirmar-exclusao" class="btn-primary-red">Excluir do MySQL</button>
+        <button id="btn-confirmar-exclusao" class="btn-primary-red">Excluir</button>
       </div>
     </div>
   </div>

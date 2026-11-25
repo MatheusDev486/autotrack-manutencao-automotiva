@@ -22,26 +22,26 @@ const App = {
     await this.carregarDadosIniciais();
   },
 
-  // Verificação de status da conexão com MySQL
+  // Verificação de status da conexão
   async verificarConexao() {
     const dot = document.getElementById('db-status-dot');
     const text = document.getElementById('db-status-text');
 
     if (dot) dot.className = 'db-dot-connected animate-pulse';
-    if (text) text.textContent = 'Verificando MySQL...';
+    if (text) text.textContent = 'Conectando...';
 
     try {
       const res = await API.health();
       if (res.bancoDeDados && res.bancoDeDados.conectado) {
         if (dot) dot.className = 'db-dot-connected';
-        if (text) text.textContent = `MySQL Conectado (${res.bancoDeDados.database})`;
+        if (text) text.textContent = 'Conectado';
       } else {
         if (dot) dot.className = 'db-dot-disconnected';
-        if (text) text.textContent = 'MySQL Desconectado';
+        if (text) text.textContent = 'Desconectado';
       }
     } catch (err) {
       if (dot) dot.className = 'db-dot-disconnected';
-      if (text) text.textContent = 'Servidor Offline';
+      if (text) text.textContent = 'Offline';
     }
   },
 
@@ -158,13 +158,13 @@ const App = {
     }
   },
 
-  // Query Obrigatória 2: Agregação com GROUP BY
+  // Serviços por veículo
   async carregarRelatorioAgregacao() {
     const tbody = document.getElementById('tbody-relatorio-agregacao');
     try {
       const res = await API.relatorios.agregacao();
       if (!res.data || res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-[#9A9A9A]">Nenhum veículo encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-[#9A9A9A]">Nenhum veículo encontrado.</td></tr>';
         return;
       }
 
@@ -181,13 +181,10 @@ const App = {
           <td class="py-2.5 px-3 text-right">
             <span class="currency-cell font-semibold">${Formatters.moeda(v.total_gasto)}</span>
           </td>
-          <td class="py-2.5 px-3 text-right">
-            <span class="currency-cell text-[#9A9A9A]">${Formatters.moeda(v.ticket_medio)}</span>
-          </td>
         </tr>
       `).join('');
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-[#D7261E]">Erro na Agregação: ${error.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-[#D7261E]">Erro ao carregar dados: ${error.message}</td></tr>`;
     }
   },
 
@@ -326,10 +323,10 @@ const App = {
     try {
       if (id) {
         await API.clientes.atualizar(id, dados);
-        Toast.success('Cliente atualizado com sucesso no MySQL!');
+        Toast.success('Cliente atualizado com sucesso!');
       } else {
         await API.clientes.criar(dados);
-        Toast.success('Cliente cadastrado com sucesso no MySQL!');
+        Toast.success('Cliente cadastrado com sucesso!');
       }
 
       this.fecharModalCliente();
@@ -460,10 +457,10 @@ const App = {
     try {
       if (id) {
         await API.veiculos.atualizar(id, dados);
-        Toast.success('Veículo atualizado com sucesso no MySQL!');
+        Toast.success('Veículo atualizado com sucesso!');
       } else {
         await API.veiculos.criar(dados);
-        Toast.success('Veículo cadastrado com sucesso no MySQL!');
+        Toast.success('Veículo cadastrado com sucesso!');
       }
 
       this.fecharModalVeiculo();
@@ -614,10 +611,10 @@ const App = {
     try {
       if (id) {
         await API.manutencoes.atualizar(id, dados);
-        Toast.success('Manutenção atualizada com sucesso no MySQL!');
+        Toast.success('Manutenção atualizada com sucesso!');
       } else {
         await API.manutencoes.criar(dados);
-        Toast.success('Ordem de manutenção registrada com sucesso no MySQL!');
+        Toast.success('Ordem de manutenção registrada com sucesso!');
       }
 
       this.fecharModalManutencao();
@@ -637,9 +634,9 @@ const App = {
     const msg = document.getElementById('confirmar-mensagem');
 
     if (tipo === 'cliente') {
-      msg.textContent = `Deseja realmente excluir o cliente "${nome}"? Atenção: Se houver veículos vinculados a ele, o MySQL bloqueará a operação (Foreign Key).`;
+      msg.textContent = `Deseja realmente excluir o cliente "${nome}"? Atenção: Se houver veículos vinculados a ele, a operação será bloqueada.`;
     } else if (tipo === 'veiculo') {
-      msg.textContent = `Deseja realmente excluir o veículo "${nome}"? Atenção: Se houver manutenções registradas para ele, o MySQL bloqueará a exclusão.`;
+      msg.textContent = `Deseja realmente excluir o veículo "${nome}"? Atenção: Se houver manutenções registradas para ele, a exclusão será bloqueada.`;
     } else {
       msg.textContent = `Deseja realmente excluir o registro de ${nome}?`;
     }
@@ -660,11 +657,11 @@ const App = {
     try {
       if (item.tipo === 'cliente') {
         await API.clientes.excluir(item.id);
-        Toast.success('Cliente excluído com sucesso do MySQL!');
+        Toast.success('Cliente excluído com sucesso!');
         await this.carregarClientes();
       } else if (item.tipo === 'veiculo') {
         await API.veiculos.excluir(item.id);
-        Toast.success('Veículo excluído com sucesso do MySQL!');
+        Toast.success('Veículo excluído com sucesso!');
         await this.carregarVeiculos();
       } else if (item.tipo === 'manutencao') {
         await API.manutencoes.excluir(item.id);
@@ -787,7 +784,7 @@ ORDER BY gasto_acumulado DESC;`
       title.textContent = 'Query 3: Subconsulta (Subquery com HAVING para comparar com a média geral)';
     }
 
-    tbody.innerHTML = '<tr><td class="p-3 text-center text-[#9A9A9A]">Executando consulta no MySQL 8...</td></tr>';
+    tbody.innerHTML = '<tr><td class="p-3 text-center text-[#9A9A9A]">Executando consulta...</td></tr>';
     thead.innerHTML = '<tr><th class="p-2.5">Processando...</th></tr>';
 
     try {
@@ -797,7 +794,7 @@ ORDER BY gasto_acumulado DESC;`
       else if (tipo === 'subquery') res = await API.relatorios.subquery();
 
       const dados = res.data || [];
-      count.textContent = `${dados.length} registros retornados do MySQL`;
+      count.textContent = `${dados.length} registros retornados`;
 
       if (dados.length === 0) {
         thead.innerHTML = '<tr><th class="p-2.5">Sem colunas</th></tr>';
@@ -806,22 +803,26 @@ ORDER BY gasto_acumulado DESC;`
       }
 
       const colunas = Object.keys(dados[0]);
-      thead.innerHTML = `<tr>${colunas.map(c => `<th class="py-2 px-3 uppercase text-[11px]">${c}</th>`).join('')}</tr>`;
+      thead.innerHTML = `<tr>${colunas.map(c => {
+        const isDesc = c.toLowerCase().includes('descricao');
+        return `<th class="py-2 px-3 uppercase text-[11px] ${isDesc ? 'min-w-[260px]' : ''}">${c}</th>`;
+      }).join('')}</tr>`;
 
       tbody.innerHTML = dados.map(linha => `
         <tr>
           ${colunas.map(c => {
             let val = linha[c];
             let isMoney = c.toLowerCase().includes('valor') || c.toLowerCase().includes('gasto') || c.toLowerCase().includes('medio');
+            const isDesc = c.toLowerCase().includes('descricao');
             if (isMoney) {
               val = Formatters.moeda(val);
             }
-            return `<td class="py-2 px-3 text-xs text-[#CCCCCC] font-mono-data ${isMoney ? 'text-right text-white font-semibold' : ''}">${val !== null && val !== undefined ? val : '-'}</td>`;
+            return `<td class="py-2 px-3 text-xs text-[#CCCCCC] font-mono-data ${isMoney ? 'text-right text-white font-semibold' : ''} ${isDesc ? 'min-w-[260px] whitespace-normal' : ''}">${val !== null && val !== undefined ? val : '-'}</td>`;
           }).join('')}
         </tr>
       `).join('');
 
-      Toast.success(`Query '${tipo}' executada com sucesso no MySQL!`);
+      Toast.success('Consulta executada com sucesso!');
     } catch (err) {
       count.textContent = 'Erro';
       tbody.innerHTML = `<tr><td class="p-3 text-center text-[#D7261E]">Falha na execução: ${err.message}</td></tr>`;

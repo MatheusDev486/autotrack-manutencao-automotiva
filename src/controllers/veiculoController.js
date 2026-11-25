@@ -1,14 +1,11 @@
 const { pool, handleMySQLError } = require('../config/database');
 
-/**
- * Controller de Veículos (CRUD Completo em MySQL)
- */
 const veiculoController = {
-  // READ: Listar todos os veículos com dados do proprietário (JOIN)
+
   async listar(req, res) {
     try {
       const sql = `
-        SELECT 
+        SELECT
           v.id,
           v.cliente_id,
           v.placa,
@@ -33,12 +30,11 @@ const veiculoController = {
     }
   },
 
-  // READ: Buscar veículo por ID
   async buscarPorId(req, res) {
     try {
       const { id } = req.params;
       const sql = `
-        SELECT 
+        SELECT
           v.id,
           v.cliente_id,
           v.placa,
@@ -67,7 +63,6 @@ const veiculoController = {
     }
   },
 
-  // CREATE: Cadastrar novo veículo vinculado a um cliente
   async criar(req, res) {
     try {
       const { cliente_id, placa, marca, modelo, ano, cor, quilometragem } = req.body;
@@ -79,7 +74,6 @@ const veiculoController = {
         });
       }
 
-      // Verifica se o cliente existe
       const [clienteRows] = await pool.query('SELECT id FROM clientes WHERE id = ?', [cliente_id]);
       if (clienteRows.length === 0) {
         return res.status(400).json({
@@ -88,8 +82,8 @@ const veiculoController = {
         });
       }
 
-      const km = quilometragem !== undefined && quilometragem !== null && quilometragem !== '' 
-        ? Number(quilometragem) 
+      const km = quilometragem !== undefined && quilometragem !== null && quilometragem !== ''
+        ? Number(quilometragem)
         : 0;
 
       const [result] = await pool.query(
@@ -116,7 +110,6 @@ const veiculoController = {
     }
   },
 
-  // UPDATE: Atualizar dados de um veículo
   async atualizar(req, res) {
     try {
       const { id } = req.params;
@@ -134,8 +127,8 @@ const veiculoController = {
         return res.status(404).json({ success: false, message: 'Veículo não encontrado para atualização.' });
       }
 
-      const km = quilometragem !== undefined && quilometragem !== null && quilometragem !== '' 
-        ? Number(quilometragem) 
+      const km = quilometragem !== undefined && quilometragem !== null && quilometragem !== ''
+        ? Number(quilometragem)
         : 0;
 
       await pool.query(
@@ -152,7 +145,6 @@ const veiculoController = {
     }
   },
 
-  // DELETE: Excluir veículo (restringido se houver manutenções vinculadas)
   async excluir(req, res) {
     try {
       const { id } = req.params;
@@ -162,7 +154,6 @@ const veiculoController = {
         return res.status(404).json({ success: false, message: 'Veículo não encontrado para exclusão.' });
       }
 
-      // Verifica quantas manutenções estão vinculadas a este veículo
       const [[{ total: totalManutencoes }]] = await pool.query(
         'SELECT COUNT(*) AS total FROM manutencoes WHERE veiculo_id = ?',
         [id]

@@ -1,10 +1,7 @@
 const { pool, handleMySQLError } = require('../config/database');
 
-/**
- * Controller de Clientes (CRUD Completo em MySQL)
- */
 const clienteController = {
-  // READ: Listar todos os clientes
+
   async listar(req, res) {
     try {
       const [rows] = await pool.query(
@@ -16,7 +13,6 @@ const clienteController = {
     }
   },
 
-  // READ: Buscar cliente por ID
   async buscarPorId(req, res) {
     try {
       const { id } = req.params;
@@ -35,7 +31,6 @@ const clienteController = {
     }
   },
 
-  // CREATE: Cadastrar novo cliente
   async criar(req, res) {
     try {
       const { nome, cpf, telefone, email, endereco } = req.body;
@@ -69,7 +64,6 @@ const clienteController = {
     }
   },
 
-  // UPDATE: Atualizar dados de um cliente
   async atualizar(req, res) {
     try {
       const { id } = req.params;
@@ -101,7 +95,6 @@ const clienteController = {
     }
   },
 
-  // DELETE: Excluir cliente (restringido se houver veículos vinculados)
   async excluir(req, res) {
     try {
       const { id } = req.params;
@@ -111,7 +104,6 @@ const clienteController = {
         return res.status(404).json({ success: false, message: 'Cliente não encontrado para exclusão.' });
       }
 
-      // Verifica quantos veículos estão vinculados a este cliente
       const [[{ total: totalVeiculos }]] = await pool.query(
         'SELECT COUNT(*) AS total FROM veiculos WHERE cliente_id = ?',
         [id]

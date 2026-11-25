@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const veiculoController = require('../controllers/veiculoController');
 
-// Rotas CRUD de Veículos
 router.get('/', veiculoController.listar);
 router.get('/:id', veiculoController.buscarPorId);
 router.post('/', veiculoController.criar);

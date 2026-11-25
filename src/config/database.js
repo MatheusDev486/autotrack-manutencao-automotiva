@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// Pool de conexões MySQL configurado exclusivamente via variáveis de ambiente
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 3306,
@@ -16,14 +15,9 @@ const pool = mysql.createPool({
   charset: 'utf8mb4'
 });
 
-/**
- * Trata erros do MySQL e retorna mensagens claras e códigos HTTP adequados.
- * Trata especialmente erro 1451 (chave estrangeira) e 1062 (chave única duplicada).
- */
 function handleMySQLError(error, res) {
   console.error('[MySQL Error]', error.code, error.message);
 
-  // ER_ROW_IS_REFERENCED_2 (1451): Tentativa de exclusão/alteração de registro pai com filhos vinculados
   if (error.errno === 1451 || error.code === 'ER_ROW_IS_REFERENCED_2') {
     return res.status(409).json({
       success: false,
@@ -32,7 +26,6 @@ function handleMySQLError(error, res) {
     });
   }
 
-  // ER_DUP_ENTRY (1062): Registro duplicado em campo UNIQUE (CPF, E-mail ou Placa)
   if (error.errno === 1062 || error.code === 'ER_DUP_ENTRY') {
     let campoDuplicado = 'dado já cadastrado';
     if (error.message.includes('cpf')) campoDuplicado = 'CPF já cadastrado no sistema';
@@ -46,7 +39,6 @@ function handleMySQLError(error, res) {
     });
   }
 
-  // ER_BAD_DB_ERROR (1049): Banco de dados não existe
   if (error.errno === 1049 || error.code === 'ER_BAD_DB_ERROR') {
     return res.status(500).json({
       success: false,
@@ -55,7 +47,6 @@ function handleMySQLError(error, res) {
     });
   }
 
-  // ECONNREFUSED: MySQL offline ou porta incorreta
   if (error.code === 'ECONNREFUSED') {
     return res.status(503).json({
       success: false,
@@ -64,7 +55,6 @@ function handleMySQLError(error, res) {
     });
   }
 
-  // ER_ACCESS_DENIED_ERROR (1045): Usuário ou senha incorretos
   if (error.errno === 1045 || error.code === 'ER_ACCESS_DENIED_ERROR') {
     return res.status(401).json({
       success: false,
@@ -73,7 +63,6 @@ function handleMySQLError(error, res) {
     });
   }
 
-  // Erro genérico
   return res.status(500).json({
     success: false,
     code: error.code || 'INTERNAL_ERROR',
@@ -81,9 +70,6 @@ function handleMySQLError(error, res) {
   });
 }
 
-/**
- * Testa a conexão com o banco de dados na inicialização
- */
 async function testConnection() {
   try {
     const connection = await pool.getConnection();

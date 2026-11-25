@@ -5,34 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AutoTrack — Sistema de Gestão de Manutenção Automotiva</title>
   <link rel="icon" type="image/jpeg" href="img/logo.jpg">
-  
-  <!-- Fontes Oficiais: Barlow Condensed, IBM Plex Sans, IBM Plex Mono -->
+
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
-  <!-- Tailwind CSS via CDN -->
+
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- FontAwesome Icons via CDN -->
+
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
-  <!-- Estilos Customizados Preto & Vermelho Oficial -->
+
+
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-[#0A0A0A] text-white min-h-screen flex flex-col font-body antialiased">
 
-  <!-- Header Superior -->
+
   <header class="bg-[#0A0A0A] border-b border-[#2A2A2A] sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between min-h-[76px] py-2">
-        
-        <!-- Logo Oficial AutoTrack -->
+
+
         <div class="flex items-center">
           <img src="img/logo.jpg" alt="AutoTrack Logo" class="h-14 sm:h-16 w-auto object-contain rounded select-none shadow-sm">
         </div>
 
-        <!-- Indicador de Conexão & Recarregar -->
+
         <div class="flex items-center gap-3">
           <div id="db-status-badge" class="db-pill">
             <span class="db-dot-connected animate-pulse" id="db-status-dot"></span>
@@ -45,7 +45,7 @@
 
       </div>
 
-      <!-- Barra de Navegação por Abas (com linha vermelha de 1px na base) -->
+
       <nav class="flex space-x-1 sm:space-x-2 py-2 overflow-x-auto nav-bar-container">
         <button onclick="App.navegar('dashboard')" id="nav-dashboard" class="tab-btn active">
           <i class="fa-solid fa-chart-pie text-sm"></i>
@@ -76,14 +76,14 @@
     </div>
   </header>
 
-  <!-- Conteúdo Principal -->
+
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
 
-    <!-- ======================================================================= -->
-    <!-- ABA 1: DASHBOARD & RELATÓRIOS -->
-    <!-- ======================================================================= -->
+
+
+
     <section id="view-dashboard" class="space-y-5">
-      <!-- Cards de Métricas (5 cards em linha) -->
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
         <div class="metric-card">
           <div class="flex items-center justify-between">
@@ -150,10 +150,10 @@
         </div>
       </div>
 
-      <!-- Relatórios e Consultas do Painel -->
+
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-        <!-- Relatório: Serviços por Veículo -->
+
         <div class="query-panel flex flex-col">
           <div class="flex items-center justify-between mb-3">
             <div>
@@ -185,7 +185,7 @@
           </div>
         </div>
 
-        <!-- Relatório: Veículos acima da média de valor -->
+
         <div class="query-panel flex flex-col">
           <div class="flex items-center justify-between mb-3">
             <div>
@@ -225,9 +225,9 @@
 
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- ABA 2: CLIENTES (CRUD COMPLETO) -->
-    <!-- ======================================================================= -->
+
+
+
     <section id="view-clientes" class="hidden space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div>
@@ -245,7 +245,7 @@
         </div>
       </div>
 
-      <!-- Tabela de Clientes -->
+
       <div class="bg-[#121212] rounded border border-[#2A2A2A] overflow-hidden">
         <div class="overflow-x-auto">
           <table class="custom-table">
@@ -270,9 +270,9 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- ABA 3: VEÍCULOS (CRUD COMPLETO) -->
-    <!-- ======================================================================= -->
+
+
+
     <section id="view-veiculos" class="hidden space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div>
@@ -291,7 +291,7 @@
         </div>
       </div>
 
-      <!-- Tabela de Veículos -->
+
       <div class="bg-[#121212] rounded border border-[#2A2A2A] overflow-hidden">
         <div class="overflow-x-auto">
           <table class="custom-table">
@@ -316,9 +316,9 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- ABA 4: MANUTENÇÕES (CRUD COMPLETO) -->
-    <!-- ======================================================================= -->
+
+
+
     <section id="view-manutencoes" class="hidden space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div>
@@ -337,7 +337,7 @@
         </div>
       </div>
 
-      <!-- Tabela de Manutenções -->
+
       <div class="bg-[#121212] rounded border border-[#2A2A2A] overflow-hidden">
         <div class="overflow-x-auto">
           <table class="custom-table">
@@ -365,9 +365,9 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- ABA 5: HISTÓRICO RELACIONAL COMPLETO (INNER JOIN) -->
-    <!-- ======================================================================= -->
+
+
+
     <section id="view-historico" class="hidden space-y-4">
       <div class="query-panel">
         <div class="flex items-center justify-between">
@@ -381,7 +381,7 @@
           </button>
         </div>
 
-        <!-- Linha vermelha divisória de 1px -->
+
         <hr class="red-divider-line">
 
         <div class="overflow-x-auto">
@@ -408,9 +408,9 @@
       </div>
     </section>
 
-    <!-- ======================================================================= -->
-    <!-- ABA 6: CONSULTAS SQL -->
-    <!-- ======================================================================= -->
+
+
+
     <section id="view-sql" class="hidden space-y-4">
       <div class="bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div class="flex items-center gap-3">
@@ -426,7 +426,7 @@
         </div>
       </div>
 
-      <!-- Seletor de Consultas -->
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <button onclick="App.executarLaboratorioSQL('join')" id="btn-lab-join" class="p-3.5 rounded bg-[#121212] border-2 border-[#D7261E] text-left transition">
           <div class="flex items-center justify-between mb-1.5">
@@ -456,7 +456,7 @@
         </button>
       </div>
 
-      <!-- Bloco de Código SQL e Execução -->
+
       <div class="bg-[#121212] rounded border border-[#2A2A2A] p-4">
         <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
           <div class="flex items-center gap-2">
@@ -469,12 +469,12 @@
           </button>
         </div>
 
-        <!-- Código SQL com Syntax Highlight visual -->
+
         <pre class="mt-3 p-3 bg-[#0A0A0A] rounded text-xs text-[#E5E5E5] font-mono-data overflow-x-auto border border-[#2A2A2A] leading-relaxed" id="lab-sql-code">
 -- Clique em um dos botões acima para carregar o SQL da consulta.
         </pre>
 
-        <!-- Retorno dos Resultados -->
+
         <div class="mt-4">
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-semibold font-heading text-[#9A9A9A] uppercase tracking-wider">Resultado da Execução</span>
@@ -497,9 +497,9 @@
 
   </main>
 
-  <!-- ======================================================================= -->
-  <!-- MODAL: CLIENTE (CREATE / UPDATE) -->
-  <!-- ======================================================================= -->
+
+
+
   <div id="modal-cliente" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
     <div class="modal-content max-w-lg w-full p-5">
       <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
@@ -550,9 +550,9 @@
     </div>
   </div>
 
-  <!-- ======================================================================= -->
-  <!-- MODAL: VEÍCULO (CREATE / UPDATE) -->
-  <!-- ======================================================================= -->
+
+
+
   <div id="modal-veiculo" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
     <div class="modal-content max-w-lg w-full p-5">
       <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
@@ -617,9 +617,9 @@
     </div>
   </div>
 
-  <!-- ======================================================================= -->
-  <!-- MODAL: MANUTENÇÃO / OS (CREATE / UPDATE) -->
-  <!-- ======================================================================= -->
+
+
+
   <div id="modal-manutencao" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
     <div class="modal-content max-w-xl w-full p-5">
       <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
@@ -695,9 +695,9 @@
     </div>
   </div>
 
-  <!-- ======================================================================= -->
-  <!-- MODAL: CONFIRMAÇÃO DE EXCLUSÃO -->
-  <!-- ======================================================================= -->
+
+
+
   <div id="modal-confirmar" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
     <div class="modal-content max-w-sm w-full p-5 text-center">
       <div class="w-10 h-10 rounded bg-[#3A0F0F] text-[#D7261E] flex items-center justify-center mx-auto text-lg mb-2.5">
@@ -705,7 +705,7 @@
       </div>
       <h3 class="text-base font-bold font-heading text-white" id="confirmar-titulo">Confirmar Exclusão</h3>
       <p class="text-xs text-[#9A9A9A] mt-1.5" id="confirmar-mensagem">Tem certeza que deseja excluir este registro?</p>
-      
+
       <div class="flex items-center justify-center gap-2 mt-5">
         <button onclick="App.fecharModalConfirmar()" class="btn-secondary-dark">Cancelar</button>
         <button id="btn-confirmar-exclusao" class="btn-primary-red">Excluir</button>
@@ -713,10 +713,10 @@
     </div>
   </div>
 
-  <!-- Container de Notificações Toast -->
+
   <div id="toast-container"></div>
 
-  <!-- Rodapé do Sistema -->
+
   <footer class="bg-[#0A0A0A] border-t border-[#2A2A2A] py-3 text-xs text-[#9A9A9A]">
     <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
       <div>
@@ -725,7 +725,7 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
 </body>

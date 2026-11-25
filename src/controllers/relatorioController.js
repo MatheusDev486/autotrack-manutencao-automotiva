@@ -1,18 +1,11 @@
 const { pool, handleMySQLError } = require('../config/database');
 
-/**
- * Controller de Relatórios e Consultas Avançadas (SQL Explícito / Raw SQL)
- * Implementa rigorosamente as consultas exigidas para a avaliação da disciplina.
- */
 const relatorioController = {
-  /**
-   * CONSULTA OBRIGATÓRIA 1: JUNÇÃO RELACIONAL (INNER JOIN)
-   * Lista histórico completo com dados combinados de manutenções, veículos e clientes.
-   */
+
   async consultaJoin(req, res) {
     try {
       const sql = `
-        SELECT 
+        SELECT
           m.id AS manutencao_id,
           m.tipo,
           m.descricao,
@@ -46,14 +39,10 @@ const relatorioController = {
     }
   },
 
-  /**
-   * CONSULTA OBRIGATÓRIA 2: AGREGAÇÃO COM GROUP BY (COMPATÍVEL MYSQL 8 ONLY_FULL_GROUP_BY)
-   * Total de manutenções, valor acumulado investido e ticket médio por veículo.
-   */
   async consultaAgregacao(req, res) {
     try {
       const sql = `
-        SELECT 
+        SELECT
           v.id AS veiculo_id,
           v.placa,
           v.marca,
@@ -66,7 +55,7 @@ const relatorioController = {
         FROM veiculos v
         INNER JOIN clientes c ON v.cliente_id = c.id
         LEFT JOIN manutencoes m ON m.veiculo_id = v.id
-        GROUP BY 
+        GROUP BY
           v.id,
           v.placa,
           v.marca,
@@ -88,14 +77,10 @@ const relatorioController = {
     }
   },
 
-  /**
-   * CONSULTA OBRIGATÓRIA 3: SUBCONSULTA (SUBQUERY COM HAVING)
-   * Veículos com gasto total superior à média geral de gastos entre todos os veículos.
-   */
   async consultaSubquery(req, res) {
     try {
       const sql = `
-        SELECT 
+        SELECT
           v.id AS veiculo_id,
           v.placa,
           CONCAT(v.marca, ' ', v.modelo) AS veiculo,
@@ -105,7 +90,7 @@ const relatorioController = {
         FROM veiculos v
         INNER JOIN clientes c ON v.cliente_id = c.id
         INNER JOIN manutencoes m ON m.veiculo_id = v.id
-        GROUP BY 
+        GROUP BY
           v.id,
           v.placa,
           v.marca,
@@ -123,7 +108,6 @@ const relatorioController = {
       `;
       const [rows] = await pool.query(sql);
 
-      // Também busca a média geral para enriquecer a exibição visual
       const [mediaGeralRows] = await pool.query(`
         SELECT AVG(sub.gasto_veiculo) AS media_geral
         FROM (
@@ -148,13 +132,10 @@ const relatorioController = {
     }
   },
 
-  /**
-   * CONSULTA ADICIONAL: Resumo Financeiro por Tipo de Manutenção (Preventiva vs Corretiva)
-   */
   async resumoTipos(req, res) {
     try {
       const sql = `
-        SELECT 
+        SELECT
           m.tipo AS tipo_manutencao,
           COUNT(m.id) AS quantidade_servicos,
           COALESCE(SUM(m.valor), 0.00) AS custo_total,
@@ -172,13 +153,10 @@ const relatorioController = {
     }
   },
 
-  /**
-   * CONSULTA ADICIONAL: Resumo Operacional por Status da Ordem de Serviço
-   */
   async resumoStatus(req, res) {
     try {
       const sql = `
-        SELECT 
+        SELECT
           m.status AS status_ordem,
           COUNT(m.id) AS total_ordens,
           COALESCE(SUM(m.valor), 0.00) AS valor_vinculado
@@ -193,24 +171,21 @@ const relatorioController = {
     }
   },
 
-  /**
-   * KPIs Consolidados para os cards do topo do Dashboard
-   */
   async metricasGerais(req, res) {
     try {
       const [clientesCount] = await pool.query('SELECT COUNT(*) AS total FROM clientes');
       const [veiculosCount] = await pool.query('SELECT COUNT(*) AS total FROM veiculos');
       const [manutencoesCount] = await pool.query('SELECT COUNT(*) AS total FROM manutencoes');
       const [financeiro] = await pool.query(`
-        SELECT 
+        SELECT
           COALESCE(SUM(valor), 0.00) AS faturamento_total,
           COALESCE(AVG(valor), 0.00) AS ticket_medio
         FROM manutencoes
         WHERE status != 'CANCELADA'
       `);
       const [pendentes] = await pool.query(`
-        SELECT COUNT(*) AS ativas 
-        FROM manutencoes 
+        SELECT COUNT(*) AS ativas
+        FROM manutencoes
         WHERE status IN ('AGENDADA', 'EM_ANDAMENTO')
       `);
 

@@ -1,30 +1,15 @@
--- =============================================================================
--- PROJETO: AutoTrack - Sistema de Gestão de Manutenção Automotiva
--- ARQUIVO: database/schema.sql
--- SGBD: MySQL 8.x / MariaDB (Persistência Estritamente Relacional)
--- AUTORES: Matheus da Silva Gomes (RA: 273137)
---          Guilherme Coco da Costa (RA: 272449)
---          Carlos Henrique Beltramo Rodrigues (RA: 272766)
--- =============================================================================
-
--- Criação do banco de dados com charset utf8mb4 (suporte completo a acentos e emojis)
 CREATE DATABASE IF NOT EXISTS autotrack_db 
   CHARACTER SET utf8mb4 
   COLLATE utf8mb4_unicode_ci;
 
 USE autotrack_db;
 
--- Desativa verificação de chaves temporariamente para garantir criação limpa se recriando
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS manutencoes;
 DROP TABLE IF EXISTS veiculos;
 DROP TABLE IF EXISTS clientes;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- =============================================================================
--- TABELA 1: clientes
--- Armazena os dados dos proprietários dos veículos atendidos pela oficina.
--- =============================================================================
 CREATE TABLE IF NOT EXISTS clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -36,10 +21,6 @@ CREATE TABLE IF NOT EXISTS clientes (
     data_atualizacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =============================================================================
--- TABELA 2: veiculos
--- Armazena os dados dos veículos vinculados obrigatoriamente a um cliente (1:N).
--- =============================================================================
 CREATE TABLE IF NOT EXISTS veiculos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT NOT NULL,
@@ -57,10 +38,6 @@ CREATE TABLE IF NOT EXISTS veiculos (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =============================================================================
--- TABELA 3: manutencoes
--- Registra o histórico e status de serviços preventivos/corretivos por veículo (1:N).
--- =============================================================================
 CREATE TABLE IF NOT EXISTS manutencoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     veiculo_id INT NOT NULL,

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const relatorioController = require('../controllers/relatorioController');
 
-// Endpoints das Consultas Obrigatórias de Avaliação
 router.get('/join', relatorioController.consultaJoin);
 router.get('/agregacao', relatorioController.consultaAgregacao);
 router.get('/subquery', relatorioController.consultaSubquery);

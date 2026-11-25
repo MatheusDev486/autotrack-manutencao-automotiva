@@ -1,20 +1,14 @@
-/**
- * AutoTrack — Lógica Completa da Interface do Usuário (Frontend)
- * Design System Oficial: Preto & Vermelho (Referência Visual Exata)
- */
-
 const App = {
-  // Estado local da aplicação
+
   state: {
     abaAtual: 'dashboard',
     clientes: [],
     veiculos: [],
     manutencoes: [],
     labQueryAtual: 'join',
-    itemParaExcluir: null // { tipo: 'cliente'|'veiculo'|'manutencao', id: number, nome: string }
+    itemParaExcluir: null
   },
 
-  // Inicialização ao carregar a página
   async init() {
     console.log('[AutoTrack] Inicializando interface gráfica...');
     this.configurarMascaras();
@@ -22,7 +16,6 @@ const App = {
     await this.carregarDadosIniciais();
   },
 
-  // Verificação de status da conexão
   async verificarConexao() {
     const dot = document.getElementById('db-status-dot');
     const text = document.getElementById('db-status-text');
@@ -45,7 +38,6 @@ const App = {
     }
   },
 
-  // Navegação entre as abas do sistema
   navegar(aba) {
     this.state.abaAtual = aba;
     const abas = ['dashboard', 'clientes', 'veiculos', 'manutencoes', 'historico', 'sql'];
@@ -63,7 +55,6 @@ const App = {
       }
     });
 
-    // Se navegou para alguma aba específica, recarrega seus dados
     if (aba === 'dashboard') {
       this.carregarDashboard();
     } else if (aba === 'clientes') {
@@ -79,20 +70,16 @@ const App = {
     }
   },
 
-  // Carregamento de dados iniciais
   async carregarDadosIniciais() {
     await this.carregarDashboard();
-    // Pré-carrega listas para uso nos selects de modais
+
     this.carregarClientes(false);
     this.carregarVeiculos(false);
   },
 
-  // ===========================================================================
-  // DASHBOARD E RELATÓRIOS (CONSULTAS OBRIGATÓRIAS)
-  // ===========================================================================
   async carregarDashboard() {
     try {
-      // 1. KPIs
+
       const kpisRes = await API.relatorios.kpis();
       if (kpisRes.success && kpisRes.data) {
         document.getElementById('kpi-clientes').textContent = kpisRes.data.totalClientes;
@@ -102,7 +89,6 @@ const App = {
         document.getElementById('kpi-faturamento').textContent = Formatters.moeda(kpisRes.data.faturamentoTotal);
       }
 
-      // 2. Relatórios Obrigatórios
       await Promise.all([
         this.carregarRelatorioAgregacao(),
         this.carregarRelatorioSubquery(),
@@ -113,7 +99,6 @@ const App = {
     }
   },
 
-  // Query Obrigatória 1: JOIN (Histórico Relacional Completo)
   async carregarRelatorioJoin() {
     const tbody = document.getElementById('tbody-relatorio-join');
     try {
@@ -158,7 +143,6 @@ const App = {
     }
   },
 
-  // Serviços por veículo
   async carregarRelatorioAgregacao() {
     const tbody = document.getElementById('tbody-relatorio-agregacao');
     try {
@@ -188,7 +172,6 @@ const App = {
     }
   },
 
-  // Query Obrigatória 3: Subquery
   async carregarRelatorioSubquery() {
     const tbody = document.getElementById('tbody-relatorio-subquery');
     const mediaLabel = document.getElementById('subquery-media-label');
@@ -226,9 +209,6 @@ const App = {
     }
   },
 
-  // ===========================================================================
-  // CLIENTES (CRUD COMPLETO)
-  // ===========================================================================
   async carregarClientes(renderizarTabela = true) {
     try {
       const res = await API.clientes.listar();
@@ -271,7 +251,7 @@ const App = {
 
   filtrarClientes() {
     const termo = document.getElementById('filtro-cliente').value.toLowerCase();
-    const filtrados = this.state.clientes.filter(c => 
+    const filtrados = this.state.clientes.filter(c =>
       c.nome.toLowerCase().includes(termo) || c.cpf.includes(termo) || c.email.toLowerCase().includes(termo)
     );
     this.renderizarTabelaClientes(filtrados);
@@ -347,9 +327,6 @@ const App = {
       `).join('');
   },
 
-  // ===========================================================================
-  // VEÍCULOS (CRUD COMPLETO)
-  // ===========================================================================
   async carregarVeiculos(renderizarTabela = true) {
     try {
       const res = await API.veiculos.listar();
@@ -397,9 +374,9 @@ const App = {
 
   filtrarVeiculos() {
     const termo = document.getElementById('filtro-veiculo').value.toLowerCase();
-    const filtrados = this.state.veiculos.filter(v => 
-      v.placa.toLowerCase().includes(termo) || 
-      v.modelo.toLowerCase().includes(termo) || 
+    const filtrados = this.state.veiculos.filter(v =>
+      v.placa.toLowerCase().includes(termo) ||
+      v.modelo.toLowerCase().includes(termo) ||
       v.marca.toLowerCase().includes(termo) ||
       (v.proprietario_nome && v.proprietario_nome.toLowerCase().includes(termo))
     );
@@ -481,9 +458,6 @@ const App = {
       `).join('');
   },
 
-  // ===========================================================================
-  // MANUTENÇÕES / OS (CRUD COMPLETO)
-  // ===========================================================================
   async carregarManutencoes() {
     try {
       const res = await API.manutencoes.listar();
@@ -543,7 +517,7 @@ const App = {
 
   filtrarManutencoes() {
     const termo = document.getElementById('filtro-manutencao').value.toLowerCase();
-    const filtradas = this.state.manutencoes.filter(m => 
+    const filtradas = this.state.manutencoes.filter(m =>
       m.placa.toLowerCase().includes(termo) ||
       m.descricao.toLowerCase().includes(termo) ||
       m.status.toLowerCase().includes(termo) ||
@@ -559,7 +533,6 @@ const App = {
     const form = document.getElementById('form-manutencao');
     form.reset();
 
-    // Data padrão para hoje se novo
     const hoje = new Date().toISOString().split('T')[0];
 
     if (m) {
@@ -625,9 +598,6 @@ const App = {
     }
   },
 
-  // ===========================================================================
-  // EXCLUSÃO COM TRATAMENTO DE ERRO 1451 (ER_ROW_IS_REFERENCED_2)
-  // ===========================================================================
   solicitarExclusao(tipo, id, nome) {
     this.state.itemParaExcluir = { tipo, id, nome };
     const modal = document.getElementById('modal-confirmar');
@@ -673,18 +643,13 @@ const App = {
       await this.carregarDashboard();
     } catch (error) {
       this.fecharModalConfirmar();
-      // O backend já formata erro 1451 com mensagem amigável
+
       Toast.error(error.message);
     }
   },
 
-  // ===========================================================================
-  // LABORATÓRIO SQL INTERATIVO (APRESENTAÇÃO ACADÊMICA)
-  // ===========================================================================
   sqlQueriesText: {
-    join: `-- CONSULTA OBRIGATÓRIA 1: JUNÇÃO RELACIONAL (INNER JOIN)
--- Combina 3 tabelas relacionadas com navegação por chave estrangeira
-SELECT 
+    join: `SELECT
     m.id AS manutencao_id,
     m.tipo,
     m.descricao,
@@ -701,9 +666,7 @@ INNER JOIN veiculos v ON m.veiculo_id = v.id
 INNER JOIN clientes c ON v.cliente_id = c.id
 ORDER BY m.data_manutencao DESC;`,
 
-    agregacao: `-- CONSULTA OBRIGATÓRIA 2: AGREGAÇÃO COM GROUP BY (MYSQL 8 ONLY_FULL_GROUP_BY)
--- Agrupa por veículo e calcula COUNT de manutenções, soma e ticket médio
-SELECT 
+    agregacao: `SELECT
     v.id AS veiculo_id,
     v.placa,
     v.marca,
@@ -716,7 +679,7 @@ SELECT
 FROM veiculos v
 INNER JOIN clientes c ON v.cliente_id = c.id
 LEFT JOIN manutencoes m ON m.veiculo_id = v.id
-GROUP BY 
+GROUP BY
     v.id,
     v.placa,
     v.marca,
@@ -725,9 +688,7 @@ GROUP BY
     c.nome
 ORDER BY total_gasto DESC;`,
 
-    subquery: `-- CONSULTA OBRIGATÓRIA 3: SUBCONSULTA (SUBQUERY COM HAVING)
--- Identifica veículos cujo gasto total excede a média global dinâmica
-SELECT 
+    subquery: `SELECT
     v.id AS veiculo_id,
     v.placa,
     CONCAT(v.marca, ' ', v.modelo) AS veiculo,
@@ -737,7 +698,7 @@ SELECT
 FROM veiculos v
 INNER JOIN clientes c ON v.cliente_id = c.id
 INNER JOIN manutencoes m ON m.veiculo_id = v.id
-GROUP BY 
+GROUP BY
     v.id,
     v.placa,
     v.marca,
@@ -762,7 +723,6 @@ ORDER BY gasto_acumulado DESC;`
     const thead = document.getElementById('lab-table-head');
     const tbody = document.getElementById('lab-table-body');
 
-    // Atualiza botões
     ['join', 'agregacao', 'subquery'].forEach(t => {
       const btn = document.getElementById(`btn-lab-${t}`);
       if (t === tipo) {
@@ -834,7 +794,6 @@ ORDER BY gasto_acumulado DESC;`
     this.executarLaboratorioSQL(this.state.labQueryAtual || 'join');
   },
 
-  // Máscaras de entrada (CPF, Telefone, Placa)
   configurarMascaras() {
     const cpfInput = document.getElementById('cliente-cpf');
     if (cpfInput) {
@@ -873,7 +832,6 @@ ORDER BY gasto_acumulado DESC;`
   }
 };
 
-// Inicia a aplicação no carregamento do DOM
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 });

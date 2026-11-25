@@ -1,11 +1,6 @@
-/**
- * AutoTrack - Camada de Integração com a API REST
- */
-
 const API = {
   baseUrl: '/api',
 
-  // Utilitário para requisições com tratamento padronizado
   async request(endpoint, options = {}) {
     const defaultHeaders = {
       'Content-Type': 'application/json',
@@ -35,12 +30,10 @@ const API = {
     }
   },
 
-  // Health check
   async health() {
     return this.request('/health');
   },
 
-  // CLIENTES (CRUD)
   clientes: {
     listar: () => API.request('/clientes'),
     buscarPorId: (id) => API.request(`/clientes/${id}`),
@@ -49,7 +42,6 @@ const API = {
     excluir: (id) => API.request(`/clientes/${id}`, { method: 'DELETE' })
   },
 
-  // VEÍCULOS (CRUD)
   veiculos: {
     listar: () => API.request('/veiculos'),
     buscarPorId: (id) => API.request(`/veiculos/${id}`),
@@ -58,7 +50,6 @@ const API = {
     excluir: (id) => API.request(`/veiculos/${id}`, { method: 'DELETE' })
   },
 
-  // MANUTENÇÕES (CRUD)
   manutencoes: {
     listar: () => API.request('/manutencoes'),
     buscarPorId: (id) => API.request(`/manutencoes/${id}`),
@@ -67,7 +58,6 @@ const API = {
     excluir: (id) => API.request(`/manutencoes/${id}`, { method: 'DELETE' })
   },
 
-  // RELATÓRIOS & QUERIES SQL
   relatorios: {
     kpis: () => API.request('/relatorios/kpis'),
     join: () => API.request('/relatorios/join'),
@@ -78,9 +68,6 @@ const API = {
   }
 };
 
-/**
- * Utilitário de Notificações Toast
- */
 const Toast = {
   show(message, type = 'info', duration = 4000) {
     const container = document.getElementById('toast-container');
@@ -88,8 +75,8 @@ const Toast = {
 
     const toast = document.createElement('div');
     toast.className = `toast px-4 py-3 rounded-lg shadow-xl text-sm font-medium flex items-center gap-3 border transition-all ${
-      type === 'success' 
-        ? 'bg-emerald-950/90 text-emerald-200 border-emerald-700/60' 
+      type === 'success'
+        ? 'bg-emerald-950/90 text-emerald-200 border-emerald-700/60'
         : type === 'error'
         ? 'bg-rose-950/90 text-rose-200 border-rose-700/60'
         : type === 'warning'
@@ -97,8 +84,8 @@ const Toast = {
         : 'bg-slate-800 text-slate-200 border-slate-700'
     }`;
 
-    const icon = type === 'success' 
-      ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>' 
+    const icon = type === 'success'
+      ? '<i class="fa-solid fa-circle-check text-emerald-400"></i>'
       : type === 'error'
       ? '<i class="fa-solid fa-triangle-exclamation text-rose-400"></i>'
       : type === 'warning'
@@ -128,9 +115,6 @@ const Toast = {
   info(msg) { this.show(msg, 'info'); }
 };
 
-/**
- * Formatadores úteis
- */
 const Formatters = {
   moeda(valor) {
     const num = parseFloat(valor);
@@ -140,7 +124,7 @@ const Formatters = {
 
   data(dataStr) {
     if (!dataStr) return '-';
-    // Se vier no formato AAAA-MM-DD
+
     const parts = dataStr.split('T')[0].split('-');
     if (parts.length === 3) {
       return `${parts[2]}/${parts[1]}/${parts[0]}`;

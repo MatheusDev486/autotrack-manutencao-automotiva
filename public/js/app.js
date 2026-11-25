@@ -1,5 +1,6 @@
 /**
  * AutoTrack — Lógica Completa da Interface do Usuário (Frontend)
+ * Design System Oficial: Preto & Vermelho (Referência Visual Exata)
  */
 
 const App = {
@@ -26,28 +27,28 @@ const App = {
     const dot = document.getElementById('db-status-dot');
     const text = document.getElementById('db-status-text');
 
-    dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse';
-    text.textContent = 'Verificando MySQL...';
+    if (dot) dot.className = 'db-dot-connected animate-pulse';
+    if (text) text.textContent = 'Verificando MySQL...';
 
     try {
       const res = await API.health();
       if (res.bancoDeDados && res.bancoDeDados.conectado) {
-        dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
-        text.textContent = `MySQL Conectado (${res.bancoDeDados.database})`;
+        if (dot) dot.className = 'db-dot-connected';
+        if (text) text.textContent = `MySQL Conectado (${res.bancoDeDados.database})`;
       } else {
-        dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
-        text.textContent = 'MySQL Desconectado';
+        if (dot) dot.className = 'db-dot-disconnected';
+        if (text) text.textContent = 'MySQL Desconectado';
       }
     } catch (err) {
-      dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-500';
-      text.textContent = 'Servidor Offline';
+      if (dot) dot.className = 'db-dot-disconnected';
+      if (text) text.textContent = 'Servidor Offline';
     }
   },
 
   // Navegação entre as abas do sistema
   navegar(aba) {
     this.state.abaAtual = aba;
-    const abas = ['dashboard', 'clientes', 'veiculos', 'manutencoes', 'sql'];
+    const abas = ['dashboard', 'clientes', 'veiculos', 'manutencoes', 'historico', 'sql'];
 
     abas.forEach(nome => {
       const section = document.getElementById(`view-${nome}`);
@@ -55,12 +56,10 @@ const App = {
 
       if (nome === aba) {
         section?.classList.remove('hidden');
-        btn?.classList.remove('text-slate-400', 'hover:bg-slate-800');
-        btn?.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+        btn?.classList.add('active');
       } else {
         section?.classList.add('hidden');
-        btn?.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
-        btn?.classList.add('text-slate-400', 'hover:bg-slate-800');
+        btn?.classList.remove('active');
       }
     });
 
@@ -73,6 +72,8 @@ const App = {
       this.carregarVeiculos();
     } else if (aba === 'manutencoes') {
       this.carregarManutencoes();
+    } else if (aba === 'historico') {
+      this.carregarRelatorioJoin();
     } else if (aba === 'sql') {
       this.executarLaboratorioSQL(this.state.labQueryAtual || 'join');
     }
@@ -112,46 +113,48 @@ const App = {
     }
   },
 
-  // Query Obrigatória 1: JOIN
+  // Query Obrigatória 1: JOIN (Histórico Relacional Completo)
   async carregarRelatorioJoin() {
     const tbody = document.getElementById('tbody-relatorio-join');
     try {
       const res = await API.relatorios.join();
       if (!res.data || res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-500">Nenhum registro encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-[#9A9A9A]">Nenhum registro encontrado.</td></tr>';
         return;
       }
 
       tbody.innerHTML = res.data.map(m => `
-        <tr class="hover:bg-slate-700/40 transition">
-          <td class="py-2.5 px-3 font-mono font-semibold text-blue-400">#${m.manutencao_id}</td>
+        <tr>
+          <td class="py-2.5 px-3 os-number">#${m.manutencao_id}</td>
           <td class="py-2.5 px-3">
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${m.tipo === 'PREVENTIVA' ? 'badge-preventiva' : 'badge-corretiva'}">
+            <span class="badge-${m.tipo.toLowerCase()}">
               ${m.tipo}
             </span>
           </td>
           <td class="py-2.5 px-3">
-            <div class="font-semibold text-slate-100">${m.marca} ${m.modelo}</div>
-            <div class="font-mono text-[11px] text-slate-400">${m.placa} (${m.ano})</div>
+            <div class="vehicle-name">${m.marca} ${m.modelo}</div>
+            <div class="vehicle-sub">${m.placa} (${m.ano})</div>
           </td>
           <td class="py-2.5 px-3">
-            <div class="text-slate-200">${m.proprietario}</div>
-            <div class="text-[11px] text-slate-400">${m.telefone}</div>
+            <div class="text-white text-xs">${m.proprietario}</div>
+            <div class="vehicle-sub">${m.telefone}</div>
           </td>
-          <td class="py-2.5 px-3 text-slate-300 max-w-xs truncate" title="${m.descricao}">
-            ${m.descricao}
+          <td class="py-2.5 px-3">
+            <div class="desc-truncate" title="${m.descricao}">${m.descricao}</div>
           </td>
-          <td class="py-2.5 px-3 text-slate-300">${m.data_formatada || Formatters.data(m.data_manutencao)}</td>
-          <td class="py-2.5 px-3 text-right font-semibold text-emerald-400">${Formatters.moeda(m.valor)}</td>
+          <td class="py-2.5 px-3 font-mono-data text-white text-xs">${m.data_formatada || Formatters.data(m.data_manutencao)}</td>
+          <td class="py-2.5 px-3 text-right">
+            <span class="currency-cell">${Formatters.moeda(m.valor)}</span>
+          </td>
           <td class="py-2.5 px-3 text-center">
-            <span class="px-2 py-0.5 rounded text-[10px] font-semibold badge-${m.status.toLowerCase()}">
+            <span class="badge-${m.status.toLowerCase()}">
               ${m.status.replace('_', ' ')}
             </span>
           </td>
         </tr>
       `).join('');
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-rose-400">Erro ao consultar JOIN: ${error.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-[#D7261E]">Erro ao consultar JOIN: ${error.message}</td></tr>`;
     }
   },
 
@@ -161,26 +164,30 @@ const App = {
     try {
       const res = await API.relatorios.agregacao();
       if (!res.data || res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">Nenhum veículo encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-[#9A9A9A]">Nenhum veículo encontrado.</td></tr>';
         return;
       }
 
       tbody.innerHTML = res.data.map(v => `
-        <tr class="hover:bg-slate-700/40 transition">
+        <tr>
           <td class="py-2.5 px-3">
-            <div class="font-semibold text-slate-100">${v.marca} ${v.modelo}</div>
-            <div class="font-mono text-[11px] text-slate-400">${v.placa}</div>
+            <div class="vehicle-name">${v.marca} ${v.modelo}</div>
+            <div class="vehicle-sub">${v.placa}</div>
           </td>
-          <td class="py-2.5 px-3 text-slate-300">${v.proprietario}</td>
+          <td class="py-2.5 px-3 text-white text-xs">${v.proprietario}</td>
           <td class="py-2.5 px-3 text-center">
-            <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-200 font-bold">${v.total_manutencoes}</span>
+            <span class="qtd-os-box">${v.total_manutencoes}</span>
           </td>
-          <td class="py-2.5 px-3 text-right font-bold text-slate-100">${Formatters.moeda(v.total_gasto)}</td>
-          <td class="py-2.5 px-3 text-right text-slate-400">${Formatters.moeda(v.ticket_medio)}</td>
+          <td class="py-2.5 px-3 text-right">
+            <span class="currency-cell font-semibold">${Formatters.moeda(v.total_gasto)}</span>
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <span class="currency-cell text-[#9A9A9A]">${Formatters.moeda(v.ticket_medio)}</span>
+          </td>
         </tr>
       `).join('');
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-rose-400">Erro na Agregação: ${error.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-[#D7261E]">Erro na Agregação: ${error.message}</td></tr>`;
     }
   },
 
@@ -196,21 +203,29 @@ const App = {
       }
 
       if (!res.data || res.data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500">Nenhum veículo acima da média encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-[#9A9A9A]">Nenhum veículo acima da média encontrado.</td></tr>';
         return;
       }
 
       tbody.innerHTML = res.data.map(v => `
-        <tr class="hover:bg-slate-700/40 transition bg-amber-500/5">
-          <td class="py-2.5 px-3 font-semibold text-slate-100">${v.veiculo}</td>
-          <td class="py-2.5 px-3 font-mono text-amber-400">${v.placa}</td>
-          <td class="py-2.5 px-3 text-slate-300">${v.proprietario}</td>
-          <td class="py-2.5 px-3 text-center font-bold text-slate-200">${v.qtd_servicos}</td>
-          <td class="py-2.5 px-3 text-right font-bold text-amber-400">${Formatters.moeda(v.gasto_acumulado)}</td>
+        <tr>
+          <td class="py-2.5 px-3">
+            <div class="vehicle-name">${v.veiculo}</div>
+          </td>
+          <td class="py-2.5 px-3">
+            <span class="plate-red">${v.placa}</span>
+          </td>
+          <td class="py-2.5 px-3 text-white text-xs">${v.proprietario}</td>
+          <td class="py-2.5 px-3 text-center">
+            <span class="qtd-os-box">${v.qtd_servicos}</span>
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <span class="currency-cell font-semibold">${Formatters.moeda(v.gasto_acumulado)}</span>
+          </td>
         </tr>
       `).join('');
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-rose-400">Erro na Subquery: ${error.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-[#D7261E]">Erro na Subquery: ${error.message}</td></tr>`;
     }
   },
 
@@ -231,24 +246,24 @@ const App = {
   renderizarTabelaClientes(lista) {
     const tbody = document.getElementById('tbody-clientes');
     if (!lista || lista.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-500">Nenhum cliente cadastrado.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-[#9A9A9A]">Nenhum cliente cadastrado.</td></tr>';
       return;
     }
 
     tbody.innerHTML = lista.map(c => `
-      <tr class="hover:bg-slate-700/30 transition">
-        <td class="py-3 px-4 font-mono text-slate-400">#${c.id}</td>
-        <td class="py-3 px-4 font-semibold text-slate-100">${c.nome}</td>
-        <td class="py-3 px-4 font-mono text-slate-300">${c.cpf}</td>
-        <td class="py-3 px-4 text-slate-300">${c.telefone}</td>
-        <td class="py-3 px-4 text-slate-300">${c.email}</td>
-        <td class="py-3 px-4 text-slate-400 max-w-xs truncate" title="${c.endereco || ''}">${c.endereco || '-'}</td>
-        <td class="py-3 px-4 text-center">
+      <tr>
+        <td class="py-2.5 px-4 font-mono-data text-[#9A9A9A]">#${c.id}</td>
+        <td class="py-2.5 px-4 font-semibold text-white">${c.nome}</td>
+        <td class="py-2.5 px-4 font-mono-data text-[#CCCCCC]">${c.cpf}</td>
+        <td class="py-2.5 px-4 text-[#CCCCCC]">${c.telefone}</td>
+        <td class="py-2.5 px-4 text-[#CCCCCC]">${c.email}</td>
+        <td class="py-2.5 px-4 text-[#9A9A9A] max-w-xs truncate" title="${c.endereco || ''}">${c.endereco || '-'}</td>
+        <td class="py-2.5 px-4 text-center">
           <div class="flex items-center justify-center gap-2">
-            <button onclick="App.editarCliente(${c.id})" class="p-1.5 rounded hover:bg-slate-700 text-blue-400 hover:text-blue-300" title="Editar">
+            <button onclick="App.editarCliente(${c.id})" class="p-1.5 rounded hover:bg-[#262626] text-[#CCCCCC] hover:text-white" title="Editar">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button onclick="App.solicitarExclusao('cliente', ${c.id}, '${c.nome.replace(/'/g, "\\'")}')" class="p-1.5 rounded hover:bg-slate-700 text-rose-400 hover:text-rose-300" title="Excluir">
+            <button onclick="App.solicitarExclusao('cliente', ${c.id}, '${c.nome.replace(/'/g, "\\'")}')" class="p-1.5 rounded hover:bg-[#3A0F0F] text-[#D7261E]" title="Excluir">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
@@ -271,7 +286,7 @@ const App = {
     form.reset();
 
     if (cliente) {
-      document.getElementById('modal-cliente-titulo').innerHTML = '<i class="fa-solid fa-pen text-blue-400"></i><span>Editar Cliente</span>';
+      document.getElementById('modal-cliente-titulo').innerHTML = '<i class="fa-solid fa-pen text-[#D7261E]"></i><span>Editar Cliente</span>';
       document.getElementById('cliente-id').value = cliente.id;
       document.getElementById('cliente-nome').value = cliente.nome;
       document.getElementById('cliente-cpf').value = cliente.cpf;
@@ -279,7 +294,7 @@ const App = {
       document.getElementById('cliente-email').value = cliente.email;
       document.getElementById('cliente-endereco').value = cliente.endereco || '';
     } else {
-      document.getElementById('modal-cliente-titulo').innerHTML = '<i class="fa-solid fa-user-plus text-blue-400"></i><span>Cadastrar Cliente</span>';
+      document.getElementById('modal-cliente-titulo').innerHTML = '<i class="fa-solid fa-user-plus text-[#D7261E]"></i><span>Cadastrar Cliente</span>';
       document.getElementById('cliente-id').value = '';
     }
   },
@@ -352,29 +367,29 @@ const App = {
   renderizarTabelaVeiculos(lista) {
     const tbody = document.getElementById('tbody-veiculos');
     if (!lista || lista.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-slate-500">Nenhum veículo cadastrado.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-[#9A9A9A]">Nenhum veículo cadastrado.</td></tr>';
       return;
     }
 
     tbody.innerHTML = lista.map(v => `
-      <tr class="hover:bg-slate-700/30 transition">
-        <td class="py-3 px-4 font-mono text-slate-400">#${v.id}</td>
-        <td class="py-3 px-4 font-mono font-bold text-emerald-400 tracking-wider">${v.placa}</td>
-        <td class="py-3 px-4">
-          <div class="font-semibold text-slate-100">${v.marca} ${v.modelo}</div>
+      <tr>
+        <td class="py-2.5 px-4 font-mono-data text-[#9A9A9A]">#${v.id}</td>
+        <td class="py-2.5 px-4 font-mono-data font-bold text-white tracking-wider">${v.placa}</td>
+        <td class="py-2.5 px-4">
+          <div class="font-semibold text-white">${v.marca} ${v.modelo}</div>
         </td>
-        <td class="py-3 px-4 text-slate-300">${v.ano} • ${v.cor}</td>
-        <td class="py-3 px-4 text-slate-300">${Formatters.km(v.quilometragem)}</td>
-        <td class="py-3 px-4">
-          <div class="text-slate-200">${v.proprietario_nome || '-'}</div>
-          <div class="text-[11px] text-slate-400">${v.proprietario_telefone || ''}</div>
+        <td class="py-2.5 px-4 text-[#CCCCCC]">${v.ano} • ${v.cor}</td>
+        <td class="py-2.5 px-4 font-mono-data text-[#CCCCCC]">${Formatters.km(v.quilometragem)}</td>
+        <td class="py-2.5 px-4">
+          <div class="text-white text-xs">${v.proprietario_nome || '-'}</div>
+          <div class="vehicle-sub">${v.proprietario_telefone || ''}</div>
         </td>
-        <td class="py-3 px-4 text-center">
+        <td class="py-2.5 px-4 text-center">
           <div class="flex items-center justify-center gap-2">
-            <button onclick="App.editarVeiculo(${v.id})" class="p-1.5 rounded hover:bg-slate-700 text-blue-400 hover:text-blue-300" title="Editar">
+            <button onclick="App.editarVeiculo(${v.id})" class="p-1.5 rounded hover:bg-[#262626] text-[#CCCCCC] hover:text-white" title="Editar">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button onclick="App.solicitarExclusao('veiculo', ${v.id}, '${v.placa} - ${v.modelo.replace(/'/g, "\\'")}')" class="p-1.5 rounded hover:bg-slate-700 text-rose-400 hover:text-rose-300" title="Excluir">
+            <button onclick="App.solicitarExclusao('veiculo', ${v.id}, '${v.placa} - ${v.modelo.replace(/'/g, "\\'")}')" class="p-1.5 rounded hover:bg-[#3A0F0F] text-[#D7261E]" title="Excluir">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
@@ -401,7 +416,7 @@ const App = {
     form.reset();
 
     if (veiculo) {
-      document.getElementById('modal-veiculo-titulo').innerHTML = '<i class="fa-solid fa-pen text-emerald-400"></i><span>Editar Veículo</span>';
+      document.getElementById('modal-veiculo-titulo').innerHTML = '<i class="fa-solid fa-pen text-[#D7261E]"></i><span>Editar Veículo</span>';
       document.getElementById('veiculo-id').value = veiculo.id;
       document.getElementById('veiculo-cliente-id').value = veiculo.cliente_id;
       document.getElementById('veiculo-placa').value = veiculo.placa;
@@ -411,7 +426,7 @@ const App = {
       document.getElementById('veiculo-cor').value = veiculo.cor;
       document.getElementById('veiculo-km').value = veiculo.quilometragem;
     } else {
-      document.getElementById('modal-veiculo-titulo').innerHTML = '<i class="fa-solid fa-car text-emerald-400"></i><span>Cadastrar Veículo</span>';
+      document.getElementById('modal-veiculo-titulo').innerHTML = '<i class="fa-solid fa-car text-[#D7261E]"></i><span>Cadastrar Veículo</span>';
       document.getElementById('veiculo-id').value = '';
     }
   },
@@ -485,38 +500,42 @@ const App = {
   renderizarTabelaManutencoes(lista) {
     const tbody = document.getElementById('tbody-manutencoes');
     if (!lista || lista.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="10" class="py-6 text-center text-slate-500">Nenhuma manutenção registrada.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10" class="py-6 text-center text-[#9A9A9A]">Nenhuma manutenção registrada.</td></tr>';
       return;
     }
 
     tbody.innerHTML = lista.map(m => `
-      <tr class="hover:bg-slate-700/30 transition">
-        <td class="py-3 px-4 font-mono font-bold text-indigo-400">#${m.id}</td>
-        <td class="py-3 px-4">
-          <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${m.tipo === 'PREVENTIVA' ? 'badge-preventiva' : 'badge-corretiva'}">
+      <tr>
+        <td class="py-2.5 px-3 os-number">#${m.id}</td>
+        <td class="py-2.5 px-3">
+          <span class="badge-${m.tipo.toLowerCase()}">
             ${m.tipo}
           </span>
         </td>
-        <td class="py-3 px-4">
-          <div class="font-semibold text-slate-100">${m.marca} ${m.modelo}</div>
-          <div class="font-mono text-[11px] text-slate-400">${m.placa}</div>
+        <td class="py-2.5 px-3">
+          <div class="vehicle-name">${m.marca} ${m.modelo}</div>
+          <div class="vehicle-sub">${m.placa}</div>
         </td>
-        <td class="py-3 px-4 text-slate-300">${m.proprietario_nome || '-'}</td>
-        <td class="py-3 px-4 text-slate-200 max-w-xs truncate" title="${m.descricao}">${m.descricao}</td>
-        <td class="py-3 px-4 text-slate-300">${Formatters.data(m.data_manutencao)}</td>
-        <td class="py-3 px-4 text-slate-400">${Formatters.km(m.quilometragem_registro)}</td>
-        <td class="py-3 px-4 text-right font-bold text-emerald-400">${Formatters.moeda(m.valor)}</td>
-        <td class="py-3 px-4 text-center">
-          <span class="px-2 py-0.5 rounded text-[10px] font-semibold badge-${m.status.toLowerCase()}">
+        <td class="py-2.5 px-3 text-white text-xs">${m.proprietario_nome || '-'}</td>
+        <td class="py-2.5 px-3">
+          <div class="desc-truncate" title="${m.descricao}">${m.descricao}</div>
+        </td>
+        <td class="py-2.5 px-3 font-mono-data text-white text-xs">${Formatters.data(m.data_manutencao)}</td>
+        <td class="py-2.5 px-3 font-mono-data text-[#9A9A9A] text-xs">${Formatters.km(m.quilometragem_registro)}</td>
+        <td class="py-2.5 px-3 text-right">
+          <span class="currency-cell">${Formatters.moeda(m.valor)}</span>
+        </td>
+        <td class="py-2.5 px-3 text-center">
+          <span class="badge-${m.status.toLowerCase()}">
             ${m.status.replace('_', ' ')}
           </span>
         </td>
-        <td class="py-3 px-4 text-center">
+        <td class="py-2.5 px-3 text-center">
           <div class="flex items-center justify-center gap-2">
-            <button onclick="App.editarManutencao(${m.id})" class="p-1.5 rounded hover:bg-slate-700 text-blue-400 hover:text-blue-300" title="Editar">
+            <button onclick="App.editarManutencao(${m.id})" class="p-1.5 rounded hover:bg-[#262626] text-[#CCCCCC] hover:text-white" title="Editar">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button onclick="App.solicitarExclusao('manutencao', ${m.id}, 'OS #${m.id} (${m.placa})')" class="p-1.5 rounded hover:bg-slate-700 text-rose-400 hover:text-rose-300" title="Excluir">
+            <button onclick="App.solicitarExclusao('manutencao', ${m.id}, 'OS #${m.id} (${m.placa})')" class="p-1.5 rounded hover:bg-[#3A0F0F] text-[#D7261E]" title="Excluir">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
@@ -547,7 +566,7 @@ const App = {
     const hoje = new Date().toISOString().split('T')[0];
 
     if (m) {
-      document.getElementById('modal-manutencao-titulo').innerHTML = '<i class="fa-solid fa-pen text-indigo-400"></i><span>Editar Manutenção</span>';
+      document.getElementById('modal-manutencao-titulo').innerHTML = '<i class="fa-solid fa-pen text-[#D7261E]"></i><span>Editar Manutenção</span>';
       document.getElementById('manutencao-id').value = m.id;
       document.getElementById('manutencao-veiculo-id').value = m.veiculo_id;
       document.getElementById('manutencao-tipo').value = m.tipo;
@@ -558,7 +577,7 @@ const App = {
       document.getElementById('manutencao-status').value = m.status;
       document.getElementById('manutencao-obs').value = m.observacoes || '';
     } else {
-      document.getElementById('modal-manutencao-titulo').innerHTML = '<i class="fa-solid fa-wrench text-indigo-400"></i><span>Nova Ordem de Manutenção</span>';
+      document.getElementById('modal-manutencao-titulo').innerHTML = '<i class="fa-solid fa-wrench text-[#D7261E]"></i><span>Nova Ordem de Manutenção</span>';
       document.getElementById('manutencao-id').value = '';
       document.getElementById('manutencao-data').value = hoje;
       document.getElementById('manutencao-status').value = 'AGENDADA';
@@ -750,11 +769,11 @@ ORDER BY gasto_acumulado DESC;`
     ['join', 'agregacao', 'subquery'].forEach(t => {
       const btn = document.getElementById(`btn-lab-${t}`);
       if (t === tipo) {
-        btn?.classList.remove('border-slate-700');
-        btn?.classList.add('border-blue-500', 'bg-slate-800/90');
+        btn?.classList.remove('border-[#2A2A2A]');
+        btn?.classList.add('border-[#D7261E]', 'bg-[#1A1A1A]');
       } else {
-        btn?.classList.remove('border-blue-500', 'bg-slate-800/90');
-        btn?.classList.add('border-slate-700');
+        btn?.classList.remove('border-[#D7261E]', 'bg-[#1A1A1A]');
+        btn?.classList.add('border-[#2A2A2A]');
       }
     });
 
@@ -768,8 +787,8 @@ ORDER BY gasto_acumulado DESC;`
       title.textContent = 'Query 3: Subconsulta (Subquery com HAVING para comparar com a média geral)';
     }
 
-    tbody.innerHTML = '<tr><td class="p-4 text-center text-slate-400">Executando consulta no MySQL 8...</td></tr>';
-    thead.innerHTML = '<tr><th class="p-3">Processando...</th></tr>';
+    tbody.innerHTML = '<tr><td class="p-3 text-center text-[#9A9A9A]">Executando consulta no MySQL 8...</td></tr>';
+    thead.innerHTML = '<tr><th class="p-2.5">Processando...</th></tr>';
 
     try {
       let res;
@@ -781,22 +800,23 @@ ORDER BY gasto_acumulado DESC;`
       count.textContent = `${dados.length} registros retornados do MySQL`;
 
       if (dados.length === 0) {
-        thead.innerHTML = '<tr><th class="p-3">Sem colunas</th></tr>';
-        tbody.innerHTML = '<tr><td class="p-4 text-center text-slate-500">Nenhum resultado retornado para esta consulta.</td></tr>';
+        thead.innerHTML = '<tr><th class="p-2.5">Sem colunas</th></tr>';
+        tbody.innerHTML = '<tr><td class="p-3 text-center text-[#9A9A9A]">Nenhum resultado retornado para esta consulta.</td></tr>';
         return;
       }
 
       const colunas = Object.keys(dados[0]);
-      thead.innerHTML = `<tr>${colunas.map(c => `<th class="py-2.5 px-3 uppercase text-[11px]">${c}</th>`).join('')}</tr>`;
+      thead.innerHTML = `<tr>${colunas.map(c => `<th class="py-2 px-3 uppercase text-[11px]">${c}</th>`).join('')}</tr>`;
 
       tbody.innerHTML = dados.map(linha => `
-        <tr class="hover:bg-slate-800/70 transition">
+        <tr>
           ${colunas.map(c => {
             let val = linha[c];
-            if (c.toLowerCase().includes('valor') || c.toLowerCase().includes('gasto') || c.toLowerCase().includes('medio')) {
+            let isMoney = c.toLowerCase().includes('valor') || c.toLowerCase().includes('gasto') || c.toLowerCase().includes('medio');
+            if (isMoney) {
               val = Formatters.moeda(val);
             }
-            return `<td class="py-2 px-3 text-xs text-slate-300 font-mono">${val !== null && val !== undefined ? val : '-'}</td>`;
+            return `<td class="py-2 px-3 text-xs text-[#CCCCCC] font-mono-data ${isMoney ? 'text-right text-white font-semibold' : ''}">${val !== null && val !== undefined ? val : '-'}</td>`;
           }).join('')}
         </tr>
       `).join('');
@@ -804,7 +824,7 @@ ORDER BY gasto_acumulado DESC;`
       Toast.success(`Query '${tipo}' executada com sucesso no MySQL!`);
     } catch (err) {
       count.textContent = 'Erro';
-      tbody.innerHTML = `<tr><td class="p-4 text-center text-rose-400">Falha na execução: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td class="p-3 text-center text-[#D7261E]">Falha na execução: ${err.message}</td></tr>`;
       Toast.error('Erro ao executar query: ' + err.message);
     }
   },

@@ -4,88 +4,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AutoTrack — Sistema de Gestão de Manutenção Automotiva</title>
+  <link rel="icon" type="image/jpeg" href="img/logo.jpg">
   
+  <!-- Fontes Oficiais: Barlow Condensed, IBM Plex Sans, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,600;1,700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#eff6ff',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a'
-            }
-          }
-        }
-      }
-    }
-  </script>
   
   <!-- FontAwesome Icons via CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <!-- Estilos Customizados -->
+  <!-- Estilos Customizados Preto & Vermelho Oficial -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+<body class="bg-[#0A0A0A] text-white min-h-screen flex flex-col font-body antialiased">
 
   <!-- Header Superior -->
-  <header class="bg-slate-800/90 border-b border-slate-700/80 backdrop-blur sticky top-0 z-40">
+  <header class="bg-[#0A0A0A] border-b border-[#2A2A2A] sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
+      <div class="flex items-center justify-between min-h-[76px] py-2">
         
-        <!-- Logo e Título -->
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
-            <i class="fa-solid fa-wrench text-xl"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xl font-bold tracking-tight text-white">Auto<span class="text-blue-500">Track</span></span>
-              <span class="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold border border-blue-500/30">MySQL 8</span>
-            </div>
-            <p class="text-xs text-slate-400 hidden sm:block">Gestão de Manutenção Automotiva & Frotas</p>
-          </div>
+        <!-- Logo Oficial AutoTrack -->
+        <div class="flex items-center">
+          <img src="img/logo.jpg" alt="AutoTrack Logo" class="h-14 sm:h-16 w-auto object-contain rounded select-none shadow-sm">
         </div>
 
-        <!-- Indicador de Conexão MySQL & Autores -->
-        <div class="flex items-center gap-4">
-          <div id="db-status-badge" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-700/50 text-xs border border-slate-600">
-            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" id="db-status-dot"></span>
-            <span class="text-slate-300 font-medium" id="db-status-text">Verificando MySQL...</span>
+        <!-- Indicador de Conexão MySQL & Recarregar -->
+        <div class="flex items-center gap-3">
+          <div id="db-status-badge" class="db-pill">
+            <span class="db-dot-connected animate-pulse" id="db-status-dot"></span>
+            <span class="text-xs font-medium" id="db-status-text">Verificando MySQL...</span>
           </div>
-          <button onclick="App.verificarConexao()" title="Recarregar status do banco" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-700 transition">
-            <i class="fa-solid fa-rotate"></i>
+          <button onclick="App.verificarConexao()" title="Recarregar status do banco" class="p-1.5 text-[#9A9A9A] hover:text-white rounded hover:bg-[#1A1A1A] transition">
+            <i class="fa-solid fa-rotate text-sm"></i>
           </button>
         </div>
 
       </div>
 
-      <!-- Barra de Navegação por Abas -->
-      <nav class="flex space-x-1 sm:space-x-4 border-t border-slate-700/50 py-2 overflow-x-auto">
-        <button onclick="App.navegar('dashboard')" id="nav-dashboard" class="tab-btn px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition bg-blue-600 text-white shadow-sm">
-          <i class="fa-solid fa-chart-pie"></i>
+      <!-- Barra de Navegação por Abas (com linha vermelha de 1px na base) -->
+      <nav class="flex space-x-1 sm:space-x-2 py-2 overflow-x-auto nav-bar-container">
+        <button onclick="App.navegar('dashboard')" id="nav-dashboard" class="tab-btn active">
+          <i class="fa-solid fa-chart-pie text-sm"></i>
           <span>Dashboard & Relatórios</span>
         </button>
-        <button onclick="App.navegar('clientes')" id="nav-clientes" class="tab-btn px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
-          <i class="fa-solid fa-users"></i>
+        <button onclick="App.navegar('clientes')" id="nav-clientes" class="tab-btn">
+          <i class="fa-solid fa-users text-sm"></i>
           <span>Clientes</span>
         </button>
-        <button onclick="App.navegar('veiculos')" id="nav-veiculos" class="tab-btn px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
-          <i class="fa-solid fa-car-side"></i>
+        <button onclick="App.navegar('veiculos')" id="nav-veiculos" class="tab-btn">
+          <i class="fa-solid fa-car-side text-sm"></i>
           <span>Veículos</span>
         </button>
-        <button onclick="App.navegar('manutencoes')" id="nav-manutencoes" class="tab-btn px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
-          <i class="fa-solid fa-screwdriver-wrench"></i>
+        <button onclick="App.navegar('manutencoes')" id="nav-manutencoes" class="tab-btn">
+          <i class="fa-solid fa-screwdriver-wrench text-sm"></i>
           <span>Manutenções (OS)</span>
         </button>
-        <button onclick="App.navegar('sql')" id="nav-sql" class="tab-btn px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition text-slate-400 hover:text-white hover:bg-slate-800">
-          <i class="fa-solid fa-database text-amber-400"></i>
+        <button onclick="App.navegar('historico')" id="nav-historico" class="tab-btn">
+          <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+          <span>Histórico</span>
+        </button>
+        <button onclick="App.navegar('sql')" id="nav-sql" class="tab-btn">
+          <i class="fa-solid fa-database text-sm"></i>
           <span>Laboratório SQL (Avaliação)</span>
         </button>
       </nav>
@@ -94,215 +77,116 @@
   </header>
 
   <!-- Conteúdo Principal -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5">
 
     <!-- ======================================================================= -->
     <!-- ABA 1: DASHBOARD & RELATÓRIOS -->
     <!-- ======================================================================= -->
-    <section id="view-dashboard" class="space-y-6">
-      
-      <!-- Linha de Boas-Vindas e Info Acadêmica -->
-      <div class="bg-gradient-to-r from-blue-900/40 via-slate-800 to-slate-800/80 p-5 rounded-2xl border border-blue-800/30 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-            <span>Visão Geral do AutoTrack</span>
-            <span class="text-xs font-normal px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Produção Local</span>
-          </h1>
-          <p class="text-sm text-slate-300 mt-1">
-            Persistência estritamente em MySQL com consultas relacionais otimizadas para MySQL 8.
-          </p>
-        </div>
-        <div class="text-xs text-slate-400 bg-slate-900/60 p-3 rounded-xl border border-slate-700/60 flex flex-col gap-1">
-          <div class="text-slate-300 font-semibold flex items-center gap-1.5">
-            <i class="fa-solid fa-graduation-cap text-blue-400"></i>
-            <span>Equipe Acadêmica (Apresentação 18/11/2026):</span>
-          </div>
-          <div>Matheus da Silva Gomes (RA: 273137)</div>
-          <div>Guilherme Coco da Costa (RA: 272449)</div>
-          <div>Carlos Henrique Beltramo Rodrigues (RA: 272766)</div>
-        </div>
-      </div>
-
-      <!-- Cards de KPIs / Métricas Globais -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/70 shadow-sm">
+    <section id="view-dashboard" class="space-y-5">
+      <!-- Cards de Métricas (5 cards em linha) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+        <div class="metric-card">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Clientes</span>
-            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+            <span class="metric-title">Clientes</span>
+            <div class="metric-icon-box">
               <i class="fa-solid fa-users"></i>
             </div>
           </div>
-          <div class="mt-2 flex items-baseline gap-2">
-            <span id="kpi-clientes" class="text-2xl font-bold text-white">-</span>
-            <span class="text-xs text-slate-400">proprietários</span>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-clientes" class="metric-number">-</span>
+            <span class="metric-unit">proprietários</span>
           </div>
         </div>
 
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/70 shadow-sm">
+        <div class="metric-card">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Veículos</span>
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <span class="metric-title">Veículos</span>
+            <div class="metric-icon-box">
               <i class="fa-solid fa-car"></i>
             </div>
           </div>
-          <div class="mt-2 flex items-baseline gap-2">
-            <span id="kpi-veiculos" class="text-2xl font-bold text-white">-</span>
-            <span class="text-xs text-slate-400">cadastrados</span>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-veiculos" class="metric-number">-</span>
+            <span class="metric-unit">cadastrados</span>
           </div>
         </div>
 
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/70 shadow-sm">
+        <div class="metric-card">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Manutenções</span>
-            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+            <span class="metric-title">Manutenções</span>
+            <div class="metric-icon-box">
               <i class="fa-solid fa-screwdriver-wrench"></i>
             </div>
           </div>
-          <div class="mt-2 flex items-baseline gap-2">
-            <span id="kpi-manutencoes" class="text-2xl font-bold text-white">-</span>
-            <span class="text-xs text-slate-400">ordens totais</span>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-manutencoes" class="metric-number">-</span>
+            <span class="metric-unit">ordens totais</span>
           </div>
         </div>
 
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/70 shadow-sm">
+        <div class="metric-card">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Em Andamento</span>
-            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+            <span class="metric-title">Em Andamento</span>
+            <div class="metric-icon-box">
               <i class="fa-solid fa-clock"></i>
             </div>
           </div>
-          <div class="mt-2 flex items-baseline gap-2">
-            <span id="kpi-ativas" class="text-2xl font-bold text-amber-400">-</span>
-            <span class="text-xs text-slate-400">agend./exec.</span>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpi-ativas" class="metric-number text-white">-</span>
+            <span class="metric-unit">agend./exec.</span>
           </div>
         </div>
 
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700/70 shadow-sm">
+        <div class="metric-card">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Volume Financeiro</span>
-            <div class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
+            <span class="metric-title">Volume Financeiro</span>
+            <div class="metric-icon-box">
               <i class="fa-solid fa-brazilian-real-sign"></i>
             </div>
           </div>
-          <div class="mt-2">
-            <span id="kpi-faturamento" class="text-xl font-bold text-teal-400">R$ 0,00</span>
+          <div class="mt-3">
+            <span id="kpi-faturamento" class="metric-financial">R$ 0,00</span>
           </div>
         </div>
       </div>
 
-      <!-- Relatórios Obrigatórios de Avaliação da Disciplina -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Relatórios Obrigatórios (Query 2 e Query 1) -->
+      <div class="grid grid-cols-1 gap-4">
 
-        <!-- Relatório Query 2: Agregação por Veículo (GROUP BY + SUM + AVG) -->
-        <div class="bg-slate-800 rounded-xl border border-slate-700/80 p-5 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
+        <!-- Relatório Query 2: Agregação por Veículo (GROUP BY) -->
+        <div class="query-panel flex flex-col">
+          <div class="flex items-center justify-between mb-3">
             <div>
               <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">Query Obrigatória 2</span>
-                <h2 class="text-base font-bold text-white">Gastos e Serviços por Veículo (GROUP BY)</h2>
+                <span class="query-badge">Gastos e Serviços por Veículo</span>
               </div>
-              <p class="text-xs text-slate-400 mt-0.5">Agrupamento com COUNT, SUM e AVG compatível com ONLY_FULL_GROUP_BY</p>
             </div>
-            <button onclick="App.carregarRelatorioAgregacao()" class="text-xs text-blue-400 hover:text-blue-300">
-              <i class="fa-solid fa-rotate-right mr-1"></i>Atualizar
+            <button onclick="App.carregarRelatorioAgregacao()" class="query-refresh-btn">
+              <i class="fa-solid fa-rotate-right"></i>Atualizar
             </button>
           </div>
 
           <div class="overflow-x-auto flex-1">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900/60 text-slate-400 uppercase tracking-wider border-b border-slate-700">
+            <table class="custom-table">
+              <thead>
                 <tr>
-                  <th class="py-2.5 px-3">Veículo / Placa</th>
-                  <th class="py-2.5 px-3">Proprietário</th>
-                  <th class="py-2.5 px-3 text-center">Qtd. OS</th>
-                  <th class="py-2.5 px-3 text-right">Total Gasto</th>
-                  <th class="py-2.5 px-3 text-right">Ticket Médio</th>
+                  <th class="py-2 px-3">Veículo / Placa</th>
+                  <th class="py-2 px-3">Proprietário</th>
+                  <th class="py-2 px-3 text-center">Qtd. OS</th>
+                  <th class="py-2 px-3 text-right">Total Gasto</th>
+                  <th class="py-2 px-3 text-right">Ticket Médio</th>
                 </tr>
               </thead>
-              <tbody id="tbody-relatorio-agregacao" class="divide-y divide-slate-700/50">
+              <tbody id="tbody-relatorio-agregacao">
                 <tr>
-                  <td colspan="5" class="py-6 text-center text-slate-400">Carregando dados agregados...</td>
+                  <td colspan="5" class="py-6 text-center text-[#9A9A9A]">Carregando dados agregados...</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        <!-- Relatório Query 3: Veículos Acima da Média Geral (Subconsulta / Subquery) -->
-        <div class="bg-slate-800 rounded-xl border border-slate-700/80 p-5 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Query Obrigatória 3</span>
-                <h2 class="text-base font-bold text-white">Veículos com Gasto Acima da Média Geral</h2>
-              </div>
-              <p class="text-xs text-slate-400 mt-0.5">
-                Subquery dinâmica: Média geral calculada = <strong id="subquery-media-label" class="text-amber-400">R$ 0,00</strong>
-              </p>
-            </div>
-            <button onclick="App.carregarRelatorioSubquery()" class="text-xs text-blue-400 hover:text-blue-300">
-              <i class="fa-solid fa-rotate-right mr-1"></i>Atualizar
-            </button>
-          </div>
 
-          <div class="overflow-x-auto flex-1">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-900/60 text-slate-400 uppercase tracking-wider border-b border-slate-700">
-                <tr>
-                  <th class="py-2.5 px-3">Veículo</th>
-                  <th class="py-2.5 px-3">Placa</th>
-                  <th class="py-2.5 px-3">Proprietário</th>
-                  <th class="py-2.5 px-3 text-center">Serviços</th>
-                  <th class="py-2.5 px-3 text-right">Total Acumulado</th>
-                </tr>
-              </thead>
-              <tbody id="tbody-relatorio-subquery" class="divide-y divide-slate-700/50">
-                <tr>
-                  <td colspan="5" class="py-6 text-center text-slate-400">Carregando subconsulta...</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Tabela da Query 1: Manutenções com Junção Relacional Tripla (JOIN) -->
-      <div class="bg-slate-800 rounded-xl border border-slate-700/80 p-5 shadow-sm">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Query Obrigatória 1</span>
-              <h2 class="text-base font-bold text-white">Histórico Relacional Completo (INNER JOIN)</h2>
-            </div>
-            <p class="text-xs text-slate-400 mt-0.5">Junção de 3 tabelas: 'manutencoes' INNER JOIN 'veiculos' INNER JOIN 'clientes'</p>
-          </div>
-          <button onclick="App.carregarRelatorioJoin()" class="text-xs text-blue-400 hover:text-blue-300">
-            <i class="fa-solid fa-rotate-right mr-1"></i>Atualizar
-          </button>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900/60 text-slate-400 uppercase tracking-wider border-b border-slate-700">
-              <tr>
-                <th class="py-2.5 px-3">OS</th>
-                <th class="py-2.5 px-3">Tipo</th>
-                <th class="py-2.5 px-3">Veículo / Placa</th>
-                <th class="py-2.5 px-3">Proprietário / Contato</th>
-                <th class="py-2.5 px-3">Descrição do Serviço</th>
-                <th class="py-2.5 px-3">Data</th>
-                <th class="py-2.5 px-3 text-right">Valor</th>
-                <th class="py-2.5 px-3 text-center">Status</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-relatorio-join" class="divide-y divide-slate-700/50">
-              <tr>
-                <td colspan="8" class="py-6 text-center text-slate-400">Carregando histórico relacional...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
 
     </section>
@@ -311,41 +195,40 @@
     <!-- ABA 2: CLIENTES (CRUD COMPLETO) -->
     <!-- ======================================================================= -->
     <section id="view-clientes" class="hidden space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-800 p-4 rounded-xl border border-slate-700">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-users text-blue-400"></i>
+          <h2 class="text-xl font-bold font-heading text-white flex items-center gap-2">
+            <i class="fa-solid fa-users text-[#D7261E]"></i>
             <span>Gestão de Clientes</span>
           </h2>
-          <p class="text-xs text-slate-400">Proprietários com dados persistidos na tabela 'clientes' no MySQL.</p>
         </div>
         <div class="flex items-center gap-2">
-          <input type="text" id="filtro-cliente" placeholder="Filtrar por nome ou CPF..." onkeyup="App.filtrarClientes()" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 w-48 sm:w-64 focus:outline-none focus:border-blue-500">
-          <button onclick="App.abrirModalCliente()" class="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
-            <i class="fa-solid fa-user-plus"></i>
+          <input type="text" id="filtro-cliente" placeholder="Filtrar por nome ou CPF..." onkeyup="App.filtrarClientes()" class="custom-input w-48 sm:w-64">
+          <button onclick="App.abrirModalCliente()" class="btn-primary-red">
+            <i class="fa-solid fa-user-plus text-xs"></i>
             <span>Novo Cliente</span>
           </button>
         </div>
       </div>
 
       <!-- Tabela de Clientes -->
-      <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-sm">
+      <div class="bg-[#121212] rounded border border-[#2A2A2A] overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900/80 text-slate-300 uppercase tracking-wider border-b border-slate-700">
+          <table class="custom-table">
+            <thead>
               <tr>
-                <th class="py-3 px-4">ID</th>
-                <th class="py-3 px-4">Nome Completo</th>
-                <th class="py-3 px-4">CPF</th>
-                <th class="py-3 px-4">Telefone</th>
-                <th class="py-3 px-4">E-mail</th>
-                <th class="py-3 px-4">Endereço</th>
-                <th class="py-3 px-4 text-center">Ações</th>
+                <th class="py-2.5 px-4">ID</th>
+                <th class="py-2.5 px-4">Nome Completo</th>
+                <th class="py-2.5 px-4">CPF</th>
+                <th class="py-2.5 px-4">Telefone</th>
+                <th class="py-2.5 px-4">E-mail</th>
+                <th class="py-2.5 px-4">Endereço</th>
+                <th class="py-2.5 px-4 text-center">Ações</th>
               </tr>
             </thead>
-            <tbody id="tbody-clientes" class="divide-y divide-slate-700/60">
+            <tbody id="tbody-clientes">
               <tr>
-                <td colspan="7" class="py-8 text-center text-slate-400">Carregando clientes...</td>
+                <td colspan="7" class="py-8 text-center text-[#9A9A9A]">Carregando clientes...</td>
               </tr>
             </tbody>
           </table>
@@ -357,41 +240,41 @@
     <!-- ABA 3: VEÍCULOS (CRUD COMPLETO) -->
     <!-- ======================================================================= -->
     <section id="view-veiculos" class="hidden space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-800 p-4 rounded-xl border border-slate-700">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-car-side text-emerald-400"></i>
+          <h2 class="text-xl font-bold font-heading text-white flex items-center gap-2">
+            <i class="fa-solid fa-car-side text-[#D7261E]"></i>
             <span>Gestão de Veículos</span>
           </h2>
-          <p class="text-xs text-slate-400">Automóveis cadastrados com Foreign Key obrigatória para cliente (1:N).</p>
+
         </div>
         <div class="flex items-center gap-2">
-          <input type="text" id="filtro-veiculo" placeholder="Filtrar por placa, modelo ou marca..." onkeyup="App.filtrarVeiculos()" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 w-48 sm:w-64 focus:outline-none focus:border-emerald-500">
-          <button onclick="App.abrirModalVeiculo()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
-            <i class="fa-solid fa-plus"></i>
+          <input type="text" id="filtro-veiculo" placeholder="Filtrar por placa, modelo ou marca..." onkeyup="App.filtrarVeiculos()" class="custom-input w-48 sm:w-64">
+          <button onclick="App.abrirModalVeiculo()" class="btn-primary-red">
+            <i class="fa-solid fa-plus text-xs"></i>
             <span>Novo Veículo</span>
           </button>
         </div>
       </div>
 
       <!-- Tabela de Veículos -->
-      <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-sm">
+      <div class="bg-[#121212] rounded border border-[#2A2A2A] overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900/80 text-slate-300 uppercase tracking-wider border-b border-slate-700">
+          <table class="custom-table">
+            <thead>
               <tr>
-                <th class="py-3 px-4">ID</th>
-                <th class="py-3 px-4">Placa</th>
-                <th class="py-3 px-4">Veículo (Marca/Modelo)</th>
-                <th class="py-3 px-4">Ano / Cor</th>
-                <th class="py-3 px-4">Km Atual</th>
-                <th class="py-3 px-4">Proprietário (Cliente)</th>
-                <th class="py-3 px-4 text-center">Ações</th>
+                <th class="py-2.5 px-4">ID</th>
+                <th class="py-2.5 px-4">Placa</th>
+                <th class="py-2.5 px-4">Veículo (Marca/Modelo)</th>
+                <th class="py-2.5 px-4">Ano / Cor</th>
+                <th class="py-2.5 px-4">Km Atual</th>
+                <th class="py-2.5 px-4">Proprietário (Cliente)</th>
+                <th class="py-2.5 px-4 text-center">Ações</th>
               </tr>
             </thead>
-            <tbody id="tbody-veiculos" class="divide-y divide-slate-700/60">
+            <tbody id="tbody-veiculos">
               <tr>
-                <td colspan="7" class="py-8 text-center text-slate-400">Carregando veículos...</td>
+                <td colspan="7" class="py-8 text-center text-[#9A9A9A]">Carregando veículos...</td>
               </tr>
             </tbody>
           </table>
@@ -403,44 +286,44 @@
     <!-- ABA 4: MANUTENÇÕES (CRUD COMPLETO) -->
     <!-- ======================================================================= -->
     <section id="view-manutencoes" class="hidden space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-800 p-4 rounded-xl border border-slate-700">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-screwdriver-wrench text-indigo-400"></i>
+          <h2 class="text-xl font-bold font-heading text-white flex items-center gap-2">
+            <i class="fa-solid fa-screwdriver-wrench text-[#D7261E]"></i>
             <span>Ordens de Serviço e Manutenções</span>
           </h2>
-          <p class="text-xs text-slate-400">Histórico de intervenções preventivas e corretivas com custos e quilometragem.</p>
+
         </div>
         <div class="flex items-center gap-2">
-          <input type="text" id="filtro-manutencao" placeholder="Filtrar por placa, descrição ou status..." onkeyup="App.filtrarManutencoes()" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 w-48 sm:w-64 focus:outline-none focus:border-indigo-500">
-          <button onclick="App.abrirModalManutencao()" class="px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition">
-            <i class="fa-solid fa-plus"></i>
+          <input type="text" id="filtro-manutencao" placeholder="Filtrar por placa, descrição ou status..." onkeyup="App.filtrarManutencoes()" class="custom-input w-48 sm:w-64">
+          <button onclick="App.abrirModalManutencao()" class="btn-primary-red">
+            <i class="fa-solid fa-plus text-xs"></i>
             <span>Nova Manutenção (OS)</span>
           </button>
         </div>
       </div>
 
       <!-- Tabela de Manutenções -->
-      <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-sm">
+      <div class="bg-[#121212] rounded border border-[#2A2A2A] overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-900/80 text-slate-300 uppercase tracking-wider border-b border-slate-700">
+          <table class="custom-table">
+            <thead>
               <tr>
-                <th class="py-3 px-4">OS</th>
-                <th class="py-3 px-4">Tipo</th>
-                <th class="py-3 px-4">Veículo</th>
-                <th class="py-3 px-4">Proprietário</th>
-                <th class="py-3 px-4">Descrição do Serviço</th>
-                <th class="py-3 px-4">Data</th>
-                <th class="py-3 px-4">Km Registro</th>
-                <th class="py-3 px-4 text-right">Valor</th>
-                <th class="py-3 px-4 text-center">Status</th>
-                <th class="py-3 px-4 text-center">Ações</th>
+                <th class="py-2.5 px-4">OS</th>
+                <th class="py-2.5 px-4">Tipo</th>
+                <th class="py-2.5 px-4">Veículo</th>
+                <th class="py-2.5 px-4">Proprietário</th>
+                <th class="py-2.5 px-4">Descrição do Serviço</th>
+                <th class="py-2.5 px-4">Data</th>
+                <th class="py-2.5 px-4">Km Registro</th>
+                <th class="py-2.5 px-4 text-right">Valor</th>
+                <th class="py-2.5 px-4 text-center">Status</th>
+                <th class="py-2.5 px-4 text-center">Ações</th>
               </tr>
             </thead>
-            <tbody id="tbody-manutencoes" class="divide-y divide-slate-700/60">
+            <tbody id="tbody-manutencoes">
               <tr>
-                <td colspan="10" class="py-8 text-center text-slate-400">Carregando manutenções...</td>
+                <td colspan="10" class="py-8 text-center text-[#9A9A9A]">Carregando manutenções...</td>
               </tr>
             </tbody>
           </table>
@@ -449,84 +332,127 @@
     </section>
 
     <!-- ======================================================================= -->
-    <!-- ABA 5: LABORATÓRIO SQL (AVALIAÇÃO ACADÊMICA & PROFESSOR) -->
+    <!-- ABA 5: HISTÓRICO RELACIONAL COMPLETO (INNER JOIN) -->
     <!-- ======================================================================= -->
-    <section id="view-sql" class="hidden space-y-6">
-      <div class="bg-slate-800 p-5 rounded-2xl border border-amber-500/30 shadow-lg">
+    <section id="view-historico" class="hidden space-y-4">
+      <div class="query-panel">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="query-badge">Histórico Relacional Completo</span>
+            </div>
+          </div>
+          <button onclick="App.carregarRelatorioJoin()" class="query-refresh-btn">
+            <i class="fa-solid fa-rotate-right"></i>Atualizar
+          </button>
+        </div>
+
+        <!-- Linha vermelha divisória de 1px -->
+        <hr class="red-divider-line">
+
+        <div class="overflow-x-auto">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th class="py-2 px-3">OS</th>
+                <th class="py-2 px-3">Tipo</th>
+                <th class="py-2 px-3">Veículo / Placa</th>
+                <th class="py-2 px-3">Proprietário / Contato</th>
+                <th class="py-2 px-3">Descrição do Serviço</th>
+                <th class="py-2 px-3">Data</th>
+                <th class="py-2 px-3 text-right">Valor</th>
+                <th class="py-2 px-3 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-relatorio-join">
+              <tr>
+                <td colspan="8" class="py-6 text-center text-[#9A9A9A]">Carregando histórico relacional...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- ABA 6: LABORATÓRIO SQL (AVALIAÇÃO ACADÊMICA) -->
+    <!-- ======================================================================= -->
+    <section id="view-sql" class="hidden space-y-4">
+      <div class="bg-[#121212] p-4 rounded border border-[#2A2A2A]">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg border border-amber-500/30">
+          <div class="w-9 h-9 rounded bg-[#3A0F0F] text-[#D7261E] flex items-center justify-center text-base border border-[#4A1515]">
             <i class="fa-solid fa-code"></i>
           </div>
           <div>
-            <h2 class="text-lg font-bold text-white">Laboratório Interativo de Consultas SQL (MySQL 8)</h2>
-            <p class="text-xs text-slate-300">
-              Espaço dedicado para demonstração na apresentação em 18/11/2026. Execute cada consulta obrigatória em tempo real contra o banco MySQL.
+            <h2 class="text-xl font-bold font-heading text-white">Laboratório Interativo de Consultas SQL (MySQL 8)</h2>
+            <p class="text-xs text-[#9A9A9A]">
+              Espaço de demonstração para a banca: execute cada consulta obrigatória em tempo real contra o banco MySQL.
             </p>
           </div>
         </div>
       </div>
 
       <!-- Seletor de Consultas -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <button onclick="App.executarLaboratorioSQL('join')" id="btn-lab-join" class="p-4 rounded-xl bg-slate-800 border-2 border-emerald-500/50 hover:border-emerald-400 text-left transition shadow">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-emerald-400 uppercase">Consulta 1</span>
-            <i class="fa-solid fa-diagram-project text-emerald-400"></i>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button onclick="App.executarLaboratorioSQL('join')" id="btn-lab-join" class="p-3.5 rounded bg-[#121212] border-2 border-[#D7261E] text-left transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold font-heading text-[#D7261E] uppercase">Consulta 1</span>
+            <i class="fa-solid fa-diagram-project text-[#D7261E]"></i>
           </div>
-          <h3 class="text-sm font-bold text-white">Junção Relacional (INNER JOIN)</h3>
-          <p class="text-xs text-slate-400 mt-1">Conecta manutencoes -> veiculos -> clientes em uma única visão unificada.</p>
+          <h3 class="text-sm font-bold font-heading text-white">Junção Relacional (INNER JOIN)</h3>
+          <p class="text-xs text-[#9A9A9A] mt-0.5">Conecta manutencoes -> veiculos -> clientes em uma única visão unificada.</p>
         </button>
 
-        <button onclick="App.executarLaboratorioSQL('agregacao')" id="btn-lab-agregacao" class="p-4 rounded-xl bg-slate-800 border border-slate-700 hover:border-purple-400 text-left transition shadow">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-purple-400 uppercase">Consulta 2</span>
-            <i class="fa-solid fa-calculator text-purple-400"></i>
+        <button onclick="App.executarLaboratorioSQL('agregacao')" id="btn-lab-agregacao" class="p-3.5 rounded bg-[#121212] border border-[#2A2A2A] hover:border-[#D7261E] text-left transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold font-heading text-[#9A9A9A] uppercase">Consulta 2</span>
+            <i class="fa-solid fa-calculator text-[#9A9A9A]"></i>
           </div>
-          <h3 class="text-sm font-bold text-white">Agregação (GROUP BY)</h3>
-          <p class="text-xs text-slate-400 mt-1">COUNT(id), SUM(valor) e AVG(valor) agrupando por veículo no padrão MySQL 8.</p>
+          <h3 class="text-sm font-bold font-heading text-white">Agregação (GROUP BY)</h3>
+          <p class="text-xs text-[#9A9A9A] mt-0.5">COUNT(id), SUM(valor) e AVG(valor) agrupando por veículo no padrão MySQL 8.</p>
         </button>
 
-        <button onclick="App.executarLaboratorioSQL('subquery')" id="btn-lab-subquery" class="p-4 rounded-xl bg-slate-800 border border-slate-700 hover:border-amber-400 text-left transition shadow">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-amber-400 uppercase">Consulta 3</span>
-            <i class="fa-solid fa-filter text-amber-400"></i>
+        <button onclick="App.executarLaboratorioSQL('subquery')" id="btn-lab-subquery" class="p-3.5 rounded bg-[#121212] border border-[#2A2A2A] hover:border-[#D7261E] text-left transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold font-heading text-[#9A9A9A] uppercase">Consulta 3</span>
+            <i class="fa-solid fa-filter text-[#9A9A9A]"></i>
           </div>
-          <h3 class="text-sm font-bold text-white">Subconsulta Dinâmica (Subquery)</h3>
-          <p class="text-xs text-slate-400 mt-1">Filtra via HAVING os veículos cujo gasto acumulado supera a média global.</p>
+          <h3 class="text-sm font-bold font-heading text-white">Subconsulta Dinâmica (Subquery)</h3>
+          <p class="text-xs text-[#9A9A9A] mt-0.5">Filtra via HAVING os veículos cujo gasto acumulado supera a média global.</p>
         </button>
       </div>
 
       <!-- Bloco de Código SQL e Execução -->
-      <div class="bg-slate-950 rounded-2xl border border-slate-800 p-5 shadow-2xl">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div class="bg-[#121212] rounded border border-[#2A2A2A] p-4">
+        <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
           <div class="flex items-center gap-2">
-            <i class="fa-solid fa-terminal text-blue-400 text-xs"></i>
-            <span id="lab-sql-title" class="text-sm font-semibold text-slate-200">SQL da Consulta Selecionada</span>
+            <i class="fa-solid fa-terminal text-[#D7261E] text-xs"></i>
+            <span id="lab-sql-title" class="text-sm font-semibold font-heading text-white">SQL da Consulta Selecionada</span>
           </div>
-          <button onclick="App.reexecutarLaboratorioSQL()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 transition">
+          <button onclick="App.reexecutarLaboratorioSQL()" class="btn-primary-red text-xs py-1.5 px-3">
             <i class="fa-solid fa-play text-xs"></i>
             <span>Executar no MySQL Agora</span>
           </button>
         </div>
 
         <!-- Código SQL com Syntax Highlight visual -->
-        <pre class="mt-3 p-4 bg-slate-900 rounded-xl text-xs text-blue-300 font-mono overflow-x-auto border border-slate-800/80 leading-relaxed" id="lab-sql-code">
+        <pre class="mt-3 p-3 bg-[#0A0A0A] rounded text-xs text-[#E5E5E5] font-mono-data overflow-x-auto border border-[#2A2A2A] leading-relaxed" id="lab-sql-code">
 -- Clique em um dos botões acima para carregar o SQL da consulta.
         </pre>
 
         <!-- Retorno dos Resultados -->
-        <div class="mt-5">
+        <div class="mt-4">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Resultado da Execução (MySQL 8)</span>
-            <span id="lab-result-count" class="text-xs text-slate-400">0 registros retornados</span>
+            <span class="text-xs font-semibold font-heading text-[#9A9A9A] uppercase tracking-wider">Resultado da Execução (MySQL 8)</span>
+            <span id="lab-result-count" class="text-xs text-[#9A9A9A]">0 registros retornados</span>
           </div>
-          <div class="overflow-x-auto max-h-96 rounded-xl border border-slate-800 bg-slate-900">
-            <table class="w-full text-left text-xs" id="lab-result-table">
-              <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider border-b border-slate-800 sticky top-0" id="lab-table-head">
-                <tr><th class="p-3">Aguardando execução...</th></tr>
+          <div class="overflow-x-auto max-h-96 rounded border border-[#2A2A2A] bg-[#0A0A0A]">
+            <table class="custom-table" id="lab-result-table">
+              <thead class="sticky top-0" id="lab-table-head">
+                <tr><th class="p-2.5">Aguardando execução...</th></tr>
               </thead>
-              <tbody id="lab-table-body" class="divide-y divide-slate-800 text-slate-200">
-                <tr><td class="p-4 text-center text-slate-500">Nenhuma query executada ainda.</td></tr>
+              <tbody id="lab-table-body">
+                <tr><td class="p-3 text-center text-[#9A9A9A]">Nenhuma query executada ainda.</td></tr>
               </tbody>
             </table>
           </div>
@@ -541,47 +467,47 @@
   <!-- MODAL: CLIENTE (CREATE / UPDATE) -->
   <!-- ======================================================================= -->
   <div id="modal-cliente" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl modal-content">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-700">
-        <h3 id="modal-cliente-titulo" class="text-base font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-user-plus text-blue-400"></i>
+    <div class="modal-content max-w-lg w-full p-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
+        <h3 id="modal-cliente-titulo" class="text-lg font-bold font-heading text-white flex items-center gap-2">
+          <i class="fa-solid fa-user-plus text-[#D7261E]"></i>
           <span>Cadastrar Cliente</span>
         </h3>
-        <button onclick="App.fecharModalCliente()" class="text-slate-400 hover:text-white">&times;</button>
+        <button onclick="App.fecharModalCliente()" class="text-[#9A9A9A] hover:text-white text-lg">&times;</button>
       </div>
 
-      <form id="form-cliente" onsubmit="App.salvarCliente(event)" class="mt-4 space-y-4">
+      <form id="form-cliente" onsubmit="App.salvarCliente(event)" class="mt-4 space-y-3">
         <input type="hidden" id="cliente-id">
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Nome Completo *</label>
-          <input type="text" id="cliente-nome" required placeholder="Ex.: Lucas Gabriel Ribeiro" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Nome Completo *</label>
+          <input type="text" id="cliente-nome" required placeholder="Ex.: Lucas Gabriel Ribeiro" class="custom-input w-full">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">CPF (Único) *</label>
-            <input type="text" id="cliente-cpf" required placeholder="000.000.000-00" maxlength="14" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">CPF (Único) *</label>
+            <input type="text" id="cliente-cpf" required placeholder="000.000.000-00" maxlength="14" class="custom-input w-full">
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Telefone / WhatsApp *</label>
-            <input type="text" id="cliente-telefone" required placeholder="(14) 99999-8888" maxlength="15" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Telefone / WhatsApp *</label>
+            <input type="text" id="cliente-telefone" required placeholder="(14) 99999-8888" maxlength="15" class="custom-input w-full">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">E-mail (Único) *</label>
-          <input type="email" id="cliente-email" required placeholder="exemplo@email.com" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">E-mail (Único) *</label>
+          <input type="email" id="cliente-email" required placeholder="exemplo@email.com" class="custom-input w-full">
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Endereço Completo</label>
-          <input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade/UF" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Endereço Completo</label>
+          <input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade/UF" class="custom-input w-full">
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-700">
-          <button type="button" onclick="App.fecharModalCliente()" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-semibold text-slate-300 transition">Cancelar</button>
-          <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-xs font-semibold text-white transition flex items-center gap-1.5">
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#2A2A2A]">
+          <button type="button" onclick="App.fecharModalCliente()" class="btn-secondary-dark">Cancelar</button>
+          <button type="submit" class="btn-primary-red">
             <i class="fa-solid fa-check"></i>
             <span>Salvar no MySQL</span>
           </button>
@@ -594,61 +520,61 @@
   <!-- MODAL: VEÍCULO (CREATE / UPDATE) -->
   <!-- ======================================================================= -->
   <div id="modal-veiculo" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl modal-content">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-700">
-        <h3 id="modal-veiculo-titulo" class="text-base font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-car text-emerald-400"></i>
+    <div class="modal-content max-w-lg w-full p-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
+        <h3 id="modal-veiculo-titulo" class="text-lg font-bold font-heading text-white flex items-center gap-2">
+          <i class="fa-solid fa-car text-[#D7261E]"></i>
           <span>Cadastrar Veículo</span>
         </h3>
-        <button onclick="App.fecharModalVeiculo()" class="text-slate-400 hover:text-white">&times;</button>
+        <button onclick="App.fecharModalVeiculo()" class="text-[#9A9A9A] hover:text-white text-lg">&times;</button>
       </div>
 
-      <form id="form-veiculo" onsubmit="App.salvarVeiculo(event)" class="mt-4 space-y-4">
+      <form id="form-veiculo" onsubmit="App.salvarVeiculo(event)" class="mt-4 space-y-3">
         <input type="hidden" id="veiculo-id">
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Proprietário (Cliente) *</label>
-          <select id="veiculo-cliente-id" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+          <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Proprietário (Cliente) *</label>
+          <select id="veiculo-cliente-id" required class="custom-input w-full">
             <option value="">Selecione o proprietário...</option>
           </select>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Placa (Única) *</label>
-            <input type="text" id="veiculo-placa" required placeholder="BRA2E19" maxlength="8" class="uppercase w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Placa (Única) *</label>
+            <input type="text" id="veiculo-placa" required placeholder="BRA2E19" maxlength="8" class="uppercase custom-input w-full">
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Marca / Montadora *</label>
-            <input type="text" id="veiculo-marca" required placeholder="Ex.: Toyota" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Marca / Montadora *</label>
+            <input type="text" id="veiculo-marca" required placeholder="Ex.: Toyota" class="custom-input w-full">
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-medium text-slate-300 mb-1">Modelo *</label>
-            <input type="text" id="veiculo-modelo" required placeholder="Ex.: Corolla XEi 2.0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Modelo *</label>
+            <input type="text" id="veiculo-modelo" required placeholder="Ex.: Corolla XEi 2.0" class="custom-input w-full">
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Ano *</label>
-            <input type="number" id="veiculo-ano" required min="1950" max="2030" placeholder="2022" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Ano *</label>
+            <input type="number" id="veiculo-ano" required min="1950" max="2030" placeholder="2022" class="custom-input w-full">
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Cor *</label>
-            <input type="text" id="veiculo-cor" required placeholder="Ex.: Prata" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Cor *</label>
+            <input type="text" id="veiculo-cor" required placeholder="Ex.: Prata" class="custom-input w-full">
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Quilometragem (Km)</label>
-            <input type="number" id="veiculo-km" min="0" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Quilometragem (Km)</label>
+            <input type="number" id="veiculo-km" min="0" placeholder="0" class="custom-input w-full">
           </div>
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-700">
-          <button type="button" onclick="App.fecharModalVeiculo()" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-semibold text-slate-300 transition">Cancelar</button>
-          <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold text-white transition flex items-center gap-1.5">
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#2A2A2A]">
+          <button type="button" onclick="App.fecharModalVeiculo()" class="btn-secondary-dark">Cancelar</button>
+          <button type="submit" class="btn-primary-red">
             <i class="fa-solid fa-check"></i>
             <span>Salvar no MySQL</span>
           </button>
@@ -661,36 +587,36 @@
   <!-- MODAL: MANUTENÇÃO / OS (CREATE / UPDATE) -->
   <!-- ======================================================================= -->
   <div id="modal-manutencao" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-xl w-full p-6 shadow-2xl modal-content">
-      <div class="flex items-center justify-between pb-4 border-b border-slate-700">
-        <h3 id="modal-manutencao-titulo" class="text-base font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-wrench text-indigo-400"></i>
+    <div class="modal-content max-w-xl w-full p-5">
+      <div class="flex items-center justify-between pb-3 border-b border-[#2A2A2A]">
+        <h3 id="modal-manutencao-titulo" class="text-lg font-bold font-heading text-white flex items-center gap-2">
+          <i class="fa-solid fa-wrench text-[#D7261E]"></i>
           <span>Nova Ordem de Manutenção</span>
         </h3>
-        <button onclick="App.fecharModalManutencao()" class="text-slate-400 hover:text-white">&times;</button>
+        <button onclick="App.fecharModalManutencao()" class="text-[#9A9A9A] hover:text-white text-lg">&times;</button>
       </div>
 
-      <form id="form-manutencao" onsubmit="App.salvarManutencao(event)" class="mt-4 space-y-4">
+      <form id="form-manutencao" onsubmit="App.salvarManutencao(event)" class="mt-4 space-y-3">
         <input type="hidden" id="manutencao-id">
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Veículo Atendido *</label>
-          <select id="manutencao-veiculo-id" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+          <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Veículo Atendido *</label>
+          <select id="manutencao-veiculo-id" required class="custom-input w-full">
             <option value="">Selecione o veículo...</option>
           </select>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Tipo de Manutenção *</label>
-            <select id="manutencao-tipo" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Tipo de Manutenção *</label>
+            <select id="manutencao-tipo" required class="custom-input w-full">
               <option value="PREVENTIVA">PREVENTIVA (Revisões / Troca de Óleo)</option>
               <option value="CORRETIVA">CORRETIVA (Reparos / Falhas mecânicas)</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Status da Ordem *</label>
-            <select id="manutencao-status" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Status da Ordem *</label>
+            <select id="manutencao-status" required class="custom-input w-full">
               <option value="AGENDADA">AGENDADA</option>
               <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
               <option value="CONCLUIDA">CONCLUÍDA</option>
@@ -700,33 +626,33 @@
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Descrição do Serviço Realizado *</label>
-          <input type="text" id="manutencao-descricao" required placeholder="Ex.: Troca de óleo 5W-30, filtro de óleo e filtro de ar" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+          <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Descrição do Serviço Realizado *</label>
+          <input type="text" id="manutencao-descricao" required placeholder="Ex.: Troca de óleo 5W-30, filtro de óleo e filtro de ar" class="custom-input w-full">
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Data do Serviço *</label>
-            <input type="date" id="manutencao-data" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Data do Serviço *</label>
+            <input type="date" id="manutencao-data" required class="custom-input w-full">
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Quilometragem (Km)</label>
-            <input type="number" id="manutencao-km" min="0" placeholder="Ex.: 45000" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Quilometragem (Km)</label>
+            <input type="number" id="manutencao-km" min="0" placeholder="Ex.: 45000" class="custom-input w-full">
           </div>
           <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Valor Total (R$) *</label>
-            <input type="number" step="0.01" min="0" id="manutencao-valor" required placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+            <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Valor Total (R$) *</label>
+            <input type="number" step="0.01" min="0" id="manutencao-valor" required placeholder="0.00" class="custom-input w-full font-mono-data">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Observações Técnicas / Peças Utilizadas</label>
-          <textarea id="manutencao-obs" rows="2" placeholder="Ex.: Marca do óleo genuíno, garantia de 90 dias, etc." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"></textarea>
+          <label class="block text-xs font-heading font-bold text-white uppercase tracking-wider mb-1">Observações Técnicas / Peças Utilizadas</label>
+          <textarea id="manutencao-obs" rows="2" placeholder="Ex.: Marca do óleo genuíno, garantia de 90 dias, etc." class="custom-input w-full"></textarea>
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-4 border-t border-slate-700">
-          <button type="button" onclick="App.fecharModalManutencao()" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-semibold text-slate-300 transition">Cancelar</button>
-          <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-xs font-semibold text-white transition flex items-center gap-1.5">
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-[#2A2A2A]">
+          <button type="button" onclick="App.fecharModalManutencao()" class="btn-secondary-dark">Cancelar</button>
+          <button type="submit" class="btn-primary-red">
             <i class="fa-solid fa-check"></i>
             <span>Salvar no MySQL</span>
           </button>
@@ -739,16 +665,16 @@
   <!-- MODAL: CONFIRMAÇÃO DE EXCLUSÃO -->
   <!-- ======================================================================= -->
   <div id="modal-confirmar" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl modal-content text-center">
-      <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto text-xl mb-3">
+    <div class="modal-content max-w-sm w-full p-5 text-center">
+      <div class="w-10 h-10 rounded bg-[#3A0F0F] text-[#D7261E] flex items-center justify-center mx-auto text-lg mb-2.5">
         <i class="fa-solid fa-trash-can"></i>
       </div>
-      <h3 class="text-base font-bold text-white" id="confirmar-titulo">Confirmar Exclusão</h3>
-      <p class="text-xs text-slate-300 mt-2" id="confirmar-mensagem">Tem certeza que deseja excluir este registro?</p>
+      <h3 class="text-base font-bold font-heading text-white" id="confirmar-titulo">Confirmar Exclusão</h3>
+      <p class="text-xs text-[#9A9A9A] mt-1.5" id="confirmar-mensagem">Tem certeza que deseja excluir este registro?</p>
       
-      <div class="flex items-center justify-center gap-3 mt-6">
-        <button onclick="App.fecharModalConfirmar()" class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-xs font-semibold text-slate-300 transition">Cancelar</button>
-        <button id="btn-confirmar-exclusao" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-xs font-semibold text-white transition">Excluir do MySQL</button>
+      <div class="flex items-center justify-center gap-2 mt-5">
+        <button onclick="App.fecharModalConfirmar()" class="btn-secondary-dark">Cancelar</button>
+        <button id="btn-confirmar-exclusao" class="btn-primary-red">Excluir do MySQL</button>
       </div>
     </div>
   </div>
@@ -757,15 +683,10 @@
   <div id="toast-container"></div>
 
   <!-- Rodapé do Sistema -->
-  <footer class="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+  <footer class="bg-[#0A0A0A] border-t border-[#2A2A2A] py-3 text-xs text-[#9A9A9A]">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
       <div>
-        <strong>AutoTrack</strong> &copy; 2026 — Gestão de Manutenção Automotiva (MySQL 8.x + Express + Tailwind)
-      </div>
-      <div class="flex items-center gap-3 text-slate-400">
-        <span>Matheus da Silva Gomes</span> •
-        <span>Guilherme Coco da Costa</span> •
-        <span>Carlos Henrique Beltramo Rodrigues</span>
+        <strong>AutoTrack</strong> &copy; 2026 — Gestão de Manutenção Automotiva
       </div>
     </div>
   </footer>

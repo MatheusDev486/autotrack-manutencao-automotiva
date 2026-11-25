@@ -5,7 +5,6 @@
 -- AUTORES: Matheus da Silva Gomes (RA: 273137)
 --          Guilherme Coco da Costa (RA: 272449)
 --          Carlos Henrique Beltramo Rodrigues (RA: 272766)
--- DATA DE APRESENTAÇÃO: 18/11/2026
 -- =============================================================================
 
 USE autotrack_db;

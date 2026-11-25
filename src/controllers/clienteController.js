@@ -111,6 +111,20 @@ const clienteController = {
         return res.status(404).json({ success: false, message: 'Cliente não encontrado para exclusão.' });
       }
 
+      // Verifica quantos veículos estão vinculados a este cliente
+      const [[{ total: totalVeiculos }]] = await pool.query(
+        'SELECT COUNT(*) AS total FROM veiculos WHERE cliente_id = ?',
+        [id]
+      );
+
+      if (totalVeiculos > 0) {
+        return res.status(409).json({
+          success: false,
+          code: 'ER_ROW_IS_REFERENCED_2',
+          message: `Não é possível excluir este cliente: ele possui ${totalVeiculos} veículo(s) cadastrado(s). Exclua os veículos primeiro.`
+        });
+      }
+
       await pool.query('DELETE FROM clientes WHERE id = ?', [id]);
 
       return res.json({

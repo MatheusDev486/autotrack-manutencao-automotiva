@@ -162,6 +162,20 @@ const veiculoController = {
         return res.status(404).json({ success: false, message: 'Veículo não encontrado para exclusão.' });
       }
 
+      // Verifica quantas manutenções estão vinculadas a este veículo
+      const [[{ total: totalManutencoes }]] = await pool.query(
+        'SELECT COUNT(*) AS total FROM manutencoes WHERE veiculo_id = ?',
+        [id]
+      );
+
+      if (totalManutencoes > 0) {
+        return res.status(409).json({
+          success: false,
+          code: 'ER_ROW_IS_REFERENCED_2',
+          message: `Não é possível excluir este veículo: ele possui ${totalManutencoes} manutenção(ões) registrada(s). Exclua as manutenções primeiro.`
+        });
+      }
+
       await pool.query('DELETE FROM veiculos WHERE id = ?', [id]);
 
       return res.json({
